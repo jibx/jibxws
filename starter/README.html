@@ -1,0 +1,88 @@
+<html>
+<head>
+<style type="text/css">
+table, td, th
+{
+border:1px solid black;
+}
+td
+{
+padding:15px;
+}
+</style>
+<title>JiBX/WS: Starter</title></head>
+<body>
+<h1>JiBX/WS: Starter</h1>
+This project contains a simple example of running JiBX/WS. 
+
+<h2>Code Structure</h2>
+For an overview of the folder structure, see <a href="http://jibx.sourceforge.net/jibxws/start.html#starter">Getting Started</a>.
+
+<h2>Building and Running</h2>
+<p>This application can be built and run using
+<a href="http://maven.apache.org/">Maven</a>, <a href="http://gradle.org">Gradle</a> or <a href="http://ant.apache.org">Ant</a>.
+The Maven and Gradle builds are the easiest to use, since they automatically start a Jetty server to run the web service.</p>  
+
+<h3>Maven</h3>
+<table>
+  <tr>
+    <th width="180px">Command</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>mvn jetty:run</code></td>
+    <td>Builds the web service, starts Jetty on port 8080 and serves the project. Uses the <a href="http://jibx.sourceforge.net/jibx-maven-plugin/">JiBX Maven Plugin</a> and <a href="http://docs.codehaus.org/display/JETTY/Maven+Jetty+Plugin">Maven Jetty Plugin</a>.<br/> 
+       Alternatively, you could build a WAR file using <code>mvn package</code> if you wish to deploy to an alternative application server.</td>
+  </tr>
+  <tr>
+    <td><code>mvn exec:java</code></td>
+    <td>Runs the client application, configured by default to connect to <code>http://localhost:8080/welcome-service</code>. Uses the <a href="http://mojo.codehaus.org/exec-maven-plugin/">Exec Maven Plugin</a>.</td>
+  </tr>
+</table>
+
+<h3>Gradle</h3>
+<p>Requires Gradle v1.0-milestone-1 or later.</p>
+<table>
+  <tr>
+    <th width="180px">Command</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>gradle jettyRun</code></td>
+    <td>Builds the web service, starts Jetty on port 8080 and serves the project. Uses the <a href="http://www.gradle.org/jetty_plugin.html">Gradle Jetty Plugin</a>.<br/> 
+       Alternatively, you could build a WAR file using <code>gradle war</code> if you wish to deploy to an alternative application server.</td>
+  </tr>
+  <tr>
+    <td><code>gradle run</code></td>
+    <td>Runs the client application, configured by default to connect to <code>http://localhost:8080/welcome-service</code>. Uses the <a href="http://www.gradle.org/application_plugin.html">Gradle Application Plugin</a>.</td>
+  </tr>
+</table>
+
+<h3>Ant</h3>
+<p>The Ant build creates a WAR file that you can deploy to your application server. If using Tomcat, it includes a target
+to deploy the WAR file to the Tomcat webapps folder.</p> 
+<table>
+  <tr>
+    <th width="180px">Command</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>ant war</code></td>
+    <td>Builds <i>jibx-ws-starter.war</i></td>
+  </tr>
+  <tr>
+    <td><code>ant deploy-tomcat</code></td>
+    <td>Copies <i>jibx-ws-starter.war</i> to <code>CATALINA_HOME</code>/webapps.  
+    You will need to have set the <code>CATALINA_HOME</code> environment variable to the location of your Tomcat installation prior to running this command.
+    Depending on your Tomcat setup, you may need to perform additional steps (eg. restart Tomcat) to start the web application.</td>
+  </tr>
+  <tr>
+    <td><code>ant run</code></td>
+    <td>Runs the client application, configured by default to connect to <code>http://localhost:8080/jibx-ws-starter/welcome-service</code>.</td>
+  </tr>
+</table>
+<h3>Expected Results</h3>
+<p>The web client sends a name (by default "World") to the web service.  The service returns a greeting to say Hello to the client. The client will print out the
+server's response "Hello World!".</p> 
+</body>
+</html>

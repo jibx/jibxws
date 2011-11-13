@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<project name="jibx-ws-clean" 
+  xmlns:ivy="antlib:org.apache.ivy.ant">
+
+  <import file="common.xml" />
+  
+  <target name="clean" description="Clean all output">
+    <delete quiet="true" dir="${target.dir}" />
+    <delete quiet="true" dir="${reports.dir}" />
+    <delete quiet="true" dir="${userdocs}" />
+    <delete quiet="true" dir="${devdocs}" />
+    <delete quiet="true" file="${dist}/${project.name}.jar" />
+    <delete quiet="true" file="${root}/${distribname}.zip" />
+  </target>
+
+  <target name="clean-ivy" depends="-ivy-init" description="Clean Ivy caches">
+    <ivy:cleancache/>
+  </target>
+  
+</project>

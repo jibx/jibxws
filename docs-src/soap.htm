@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JiBX/WS: SOAP</title>
+</head>
+<body class="composite">
+
+<h1>SOAP</h1>
+
+<div id="bodycol">
+<div class="app">
+<div class="h3">
+
+<h3>SOAP Specific Features</h3>
+<p>JiBX/WS currently supports SOAP 1.1. This page documents features specific to the SOAP protocol.</p>
+
+<h3><a name="header">SOAP Headers</a></h3>
+
+<p>JiBX/WS <i>handlers</i> facilitate the reading and writing of SOAP headers.</p>
+
+<p>Writing a SOAP header requires a handler that implements the <a href="%api%/org/jibx/ws/io/handler/OutHandler.html">OutHandler</a> interface.
+Commonly, the <a href="%api%/org/jibx/ws/io/handler/MarshallingOutHandler.html">MarshallingOutHandler</a> implementation is used, 
+which marshalls a payload using JiBX bindings. On
+the server side, the <a href="%api%/org/jibx/ws/io/handler/ContextAttributeMarshallingOutHandler.html">ContextAttributeMarshallingOutHandler</a> 
+implementation retrieves the payload to be written from an attribute on the current outbound message context.</p>
+
+<p>Reading a SOAP header requires that the handler implement the <a href="%api%/org/jibx/ws/io/handler/InHandler.html">InHandler</a> interface.
+Commonly, the <a href="%api%/org/jibx/ws/io/handler/UnmarshallingInHandler.html">UnmarshallingInHandler</a> implementation is used, 
+which unmarshalls a payload using JiBX bindings.
+On the server side, the <a href="%api%/org/jibx/ws/io/handler/ContextAttributeUnmarshallingInHandler.html">ContextAttributeUnmarshallingInHandler</a> implementation sets an attribute on the current
+inbound message context with the payload that has been read.</p>
+
+<h4><a name="header-config">Configuration</a></h4>
+
+<p>To add an outbound handler to the client, call the 
+<a href="%api%/org/jibx/ws/soap/client/SoapClient.html#addOutHeaderHandler(org.jibx.ws.io.handler.OutHandler)">SoapClient.addOutHeaderHandler(OutHandler)</a>
+method, or the convenience method 
+<a href="%api%/org/jibx/ws/soap/client/SoapClient.html#addOutHeader(java.lang.Object)">SoapClient.addOutHeader(Object)</a> 
+which adds a <code>MarshallingOutHandler</code> for the specified object. Outbound header handlers are invoked in the order in which they are added.</p>
+
+<p>To add an inbound handler to the client, call the 
+<a href="%api%/org/jibx/ws/soap/client/SoapClient.html#addInHeaderHandler(org.jibx.ws.io.handler.InHandler)">SoapClient.addInHeaderHandler(InHandler)</a>
+method. For each header, inbound header handlers are invoked in the order in which they are added until a handler returns true
+from the <a href="%api%/org/jibx/ws/io/handler/InHandler.html#invoke(org.jibx.ws.context.InContext, org.jibx.runtime.IXMLReader)">invoke</a> 
+method, when the processing of that header is deemed to be complete and processing continues with the next header.</p>
+
+<p>The server is configured using <a href="%define%#handler-class">handler-class</a> elements in the service
+definition file. Each handler-class that implements <code>org.jibx.ws.io.InHandler</code> is added as an inbound header
+handler. Each handler-class that implements <code>org.jibx.ws.io.OutHandler</code> is added as an outbound header
+handler. Typically the classes <code>ContextAttributeMarshallingOutHandler</code> and <code>ContextAttributeUnmarshallingInHandler</code>
+are used, since these can write and read the header values from attributes in the current message context.</p>
+
+<h4><a name="header-example">Example</a></h4>
+
+<p>See the <a href="%example%#soap-headers">SOAP Headers example application</a>.</p>
+
+<h3><a name="fault">SOAP Faults</a></h3>
+
+<p>By default, for the SOAP protocol, the JiBX/WS server is configured with an exception handler that behaves as described
+below.  This behavior can be changed by implementing a custom <a href=%define%#service-exception-handler-class>service exception
+handler</a>.</p>
+ 
+<h4><a name="fault-server">Creating a SOAP Fault</a></h4>
+
+<p>The JiBX/WS server code will return a SOAP Fault whenever the service class throws an exception, or an error
+occurs in the handling of the SOAP message (for example invalid message format).</p>
+
+<p>If the error is due to a failure in processing a SOAP header with the <a
+	href="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383500">mustUnderstand</a> attribute set, the fault code will
+be set to <code>SOAP:MustUnderstand</code> (where <code>SOAP</code> is the SOAP namespace), and the fault string set to
+the exception message.</p>
+
+<p>Otherwise, by default, JiBX/WS will return a SOAP Fault with the fault code set to <code>SOAP:Server</code>
+(where <code>SOAP</code> is the SOAP namespace), and the fault string set to the exception message. To include a fault
+detail element containing a stack trace, include the <a href="%define%#fault">fault</a> element in the service
+definition file with the <code>include-stack-trace</code> attribute to true.</p>
+
+<p>Alternatively, for full control of the contents of the SOAP Fault, the service method can return a 
+<a href="%api%/org/jibx/ws/soap/SoapFaultException.html">SoapFaultException</a>
+containing a <a href="%api%/org/jibx/ws/soap/SoapFault.html">SoapFault</a> object. 
+In order to add fault detail elements, use the 
+<a href=%api%/org/jibx/ws/soap/SoapFault.html#addDetailWriter(org.jibx.ws.io.handler.OutHandler)>SoapFault.addDetailWriter(OutHandler)</a>
+method.</p>
+
+<h4><a name="fault-server">Receiving a SOAP Fault</a></h4>
+
+<p>On receipt of a SOAP Fault message, the JiBX/WS framework will throw a 
+<a href="%api%/org/jibx/ws/soap/SoapFaultException.html">SoapFaultException</a>
+containing a <a href="%api%/org/jibx/ws/soap/SoapFault.html">SoapFault</a> object. 
+The client code is responsible for catching this exception and taking appropriate action.</p>
+
+<p>In order to read any fault detail elements, the client code must add a fault detail handler by calling <code>addInFaultDetailsHandler(InHandler)</code>.
+For example, if the server is returning a stack trace in the detail element, call <code>client.
+<a href="%api%/org/jibx/ws/soap/client/SoapClient.html#addInFaultDetailsHandler(org.jibx.ws.io.handler.InHandler)">addInFaultDetailsHandler</a>(new
+<a href="%api%/org/jibx/ws/io/handler/ExceptionReader.html">ExceptionReader</a>())</code>. The <code>SoapClient</code> automatically adds a <code>UnmarshallingInHandler</code> handler for the
+JiBX binding passed to its constructor, so if the detail element has a mapping in this binding, you do not need to add a
+handler.</p>
+
+<h4><a name="fault-example">Examples</a></h4>
+
+<p>The <a href="%example%#soap-fault-trace">SOAP Fault Trace</a> example configures the server to return a stack
+trace, and adds a handler to the client code to unmarshal this stack trace.</p>
+
+<p>The <a href="%example%#soap-fault-custom">SOAP Fault Custom</a> example includes an actor element and a custom
+detail element in the SOAP Fault. The client code relies on the custom detail element being defined in the JiBX binding
+to unmarshal the detail element.</p>
+
+</div>
+</div>
+</div>
+
+</body>
+</html>

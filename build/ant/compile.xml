@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<project name="jibx-ws-compile">
+
+  <import file="common.xml" />
+
+  <!-- Extra classpath settings for compiling with old JDKs.  Defaults to no extra classpath. -->
+  <path id="bind.extra.classpath" />
+  
+  <!-- Properties to allow source code and tests to be excluded when compiling with old JDKs. Default to no exclusions. -->
+  <property name="exclude.src" value="" />
+  
+  <path id="bind.classpath">
+    <pathelement location="${jibx.lib.dir}/jibx-bind.jar" />
+    <pathelement location="${jibx.lib.dir}/jibx-run.jar" />
+    <pathelement location="${jibx.lib.dir}/bcel.jar" />
+    <pathelement location="${jibx.lib.dir}/xpp3.jar" />
+    <path refid="bind.extra.classpath" />
+  </path>
+
+  <path id="compile.classpath">
+    <pathelement location="${jibx.lib.dir}/jibx-run.jar" />
+    <pathelement location="${jibx.lib.dir}/jibx-extras.jar" />
+    <pathelement location="${jibx.lib.dir}/xbis-jibx.jar" />
+    <pathelement location="${lib.dir}/servlet-api.jar" />
+    <pathelement location="${lib.dir}/commons-logging.jar" />
+    <pathelement location="${lib.spring.dir}/spring-beans.jar" />
+    <pathelement location="${lib.spring.dir}/spring-core.jar" />
+    <pathelement location="${lib.spring.dir}/spring-context.jar" />
+    <pathelement location="${lib.spring.dir}/spring-webmvc.jar" />
+  </path>
+  
+  <!-- Set options for debug build -->
+  <target name="setdebug">
+    <property name="debug" value="on" />
+  </target>
+
+  <!-- Compile the code -->
+  <target name="compile" depends="-check-jibx-lib-dir" description="Compile the source code">
+    <mkdir dir="${main.target.dir}"/>
+    <javac srcdir="${main.src.dir}"
+           destdir="${main.target.dir}"
+           includes="org/jibx/**/*.java"
+           excludes="${exclude.src}"
+           debug="${debug}"
+           deprecation="on"
+           source="1.3"
+           target="1.3">
+      <classpath refid="compile.classpath" />
+    </javac>
+    <copy todir="${main.target.dir}">
+      <fileset dir="${main.src.dir}" includes="*.properties" />
+    </copy>
+  </target>
+
+  <!-- Run the JiBX binding compiler-->
+  <target name="bind" depends="compile" description="Run the JiBX binding compiler">
+    <taskdef name="bind" classname="org.jibx.binding.ant.CompileTask">
+      <classpath refid="bind.classpath" />
+    </taskdef>
+    
+    <bind>
+      <classpath>
+        <path refid="compile.classpath" />
+        <path refid="bind.extra.classpath" />
+        <path path="${main.target.dir}" />
+      </classpath>
+      <bindingfileset dir="${main.src.dir}">
+        <include name="service-mapping.xml" />
+      </bindingfileset>
+    </bind>
+  </target>
+
+</project>

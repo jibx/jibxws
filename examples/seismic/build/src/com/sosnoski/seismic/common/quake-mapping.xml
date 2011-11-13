@@ -1,0 +1,59 @@
+<binding forwards="false">
+
+  <namespace uri="http://www.sosnoski.com/quakes" prefix="qk" default="elements"/>
+  
+  <mapping name="results" class="com.sosnoski.seismic.common.Response">
+    <value style="attribute" name="count"
+        get-method="getLength" set-method="setLength"/>
+    <collection load-method="getSet" size-method="getLength"
+        store-method="setSet" item-type="com.sosnoski.seismic.common.QuakeSet"/>
+  </mapping>
+  
+  <mapping name="result-set" class="com.sosnoski.seismic.common.QuakeSet">
+    <mapping name="region" class="com.sosnoski.seismic.common.Region">
+      <value style="attribute" name="ident" ident="def"
+        get-method="getIdent" set-method="setIdent"/>
+      <value style="attribute" name="index" field="regionCode"/>
+      <value style="text" field="regionName"/>
+    </mapping>
+    <value name="area-name" field="seismicName"/>
+    <structure name="regions">
+      <value style="attribute" name="count"
+          get-method="getRegionsLength" set-method="setRegionsLength"/>
+      <collection item-type="com.sosnoski.seismic.common.Region"
+          load-method="getRegion" size-method="getRegionsLength"
+          store-method="setRegion"/>
+    </structure>
+    <structure name="quakes">
+      <value style="attribute" name="count"
+          get-method="getQuakesLength" set-method="setQuakesLength"/>
+      <collection load-method="getQuake"
+          size-method="getQuakesLength" store-method="setQuake">
+        <structure name="quake" value-style="attribute"
+            type="com.sosnoski.seismic.common.Quake">
+          <value name="time" field="dateTime"/>
+          <value name="millis" field="milliseconds"/>
+          <value name="latitude" field="latitude"/>
+          <value name="longitude" field="longitude"/>
+          <value name="depth" field="depth"/>
+          <value name="magnitude" field="magnitude"/>
+          <value name="method" field="method"/>
+          <value name="region" field="region" ident="ref"/>
+        </structure>
+      </collection>
+    </structure>
+  </mapping>
+  
+  <mapping name="query" class="com.sosnoski.seismic.common.Query">
+    <value name="min-date" field="minDateTime" usage="optional"/>
+    <value name="max-date" field="maxDateTime" usage="optional"/>
+    <value name="min-long" field="minLongitude" usage="optional"/>
+    <value name="max-long" field="maxLongitude" usage="optional"/>
+    <value name="min-lat" field="minLatitude" usage="optional"/>
+    <value name="max-lat" field="maxLatitude" usage="optional"/>
+    <value name="min-mag" field="minMagnitude" usage="optional"/>
+    <value name="max-mag" field="maxMagnitude" usage="optional"/>
+    <value name="min-depth" field="minDepth" usage="optional"/>
+    <value name="max-depth" field="maxDepth" usage="optional"/>
+  </mapping>
+</binding>

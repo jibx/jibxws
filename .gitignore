@@ -1,0 +1,12 @@
+target
+.settings
+.project
+.classpath
+*~
+.metadata
+*.releaseBackup
+release.properties
+dep-lib/
+lib/
+spring-lib/
+

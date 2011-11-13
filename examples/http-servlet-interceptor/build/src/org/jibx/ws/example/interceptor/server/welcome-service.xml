@@ -1,0 +1,13 @@
+<service name="jibxws.example.hello">
+  <service-class>org.jibx.ws.example.interceptor.server.HelloServer</service-class>
+  <operation method="welcomeService"/>
+  <output-completion-listener-class>org.jibx.ws.example.interceptor.server.ResponseListener</output-completion-listener-class>
+  <http-servlet-options>
+    <input-stream-interceptor class="org.jibx.ws.transport.interceptor.CopiedInputStreamInterceptor" >
+      <constructor-arg value="request.copy"/>
+    </input-stream-interceptor>
+    <output-stream-interceptor class="org.jibx.ws.transport.interceptor.CopiedOutputStreamInterceptor" >
+      <constructor-arg value="response.copy"/>
+    </output-stream-interceptor>
+  </http-servlet-options>
+</service>

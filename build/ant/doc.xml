@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+
+<project name="jibx-ws-doc">
+  
+  <import file="compile.xml"/>
+  <import file="test.xml"/>
+
+  <!-- Build the user javadocs -->
+  <target name="javadoc" description="Create public Javadocs" depends="-default-version">
+    <delete quiet="true">
+      <fileset dir="${javadoc.user.dir}" includes="*" />
+    </delete>
+    <mkdir dir="${javadoc.user.dir}" />
+    <javadoc destdir="${javadoc.user.dir}"
+             author="false"
+             version="true"
+             noindex="true"
+             nohelp="true"
+             notree="true"
+             overview="${main.src.dir}/org/jibx/ws/overview.html"
+             access="public"
+             windowtitle="${project.desc} - Version ${version}"
+             doctitle="${project.desc} - Version ${version}"
+             bottom="&lt;table width='80%%'&gt;&lt;tr&gt;&lt;td width='50%%'&gt;&lt;p align='center'&gt;&lt;a href='http://www.jibx.org/' target='_top'&gt;&lt;font size='3'&gt;&lt;b&gt;Project Web Site&lt;/b&gt;&lt;/font&gt;&lt;/a&gt;&lt;/td&gt;&lt;td width='50%%'&gt;&lt;p align='center'&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;">
+      <fileset dir="${main.src.dir}" defaultexcludes="yes">
+        <include name="org/jibx/ws/*.java" />
+        <include name="org/jibx/ws/io/MessageOptions.java" />
+        <include name="org/jibx/ws/io/XmlEncoding.java" />
+        <include name="org/jibx/ws/io/XmlOptions.java" />
+        <include name="org/jibx/ws/io/handler/*.java" />
+        <include name="org/jibx/ws/client/Client.java" />
+        <include name="org/jibx/ws/context/*Context.java" />
+        <include name="org/jibx/ws/pox/PoxProtocol.java" />
+        <include name="org/jibx/ws/pox/client/*.java" />
+        <include name="org/jibx/ws/protocol/*.java" />
+        <include name="org/jibx/ws/server/**/*Definition.java" />
+        <include name="org/jibx/ws/http/servlet/*ServiceMapper.java" />
+        <include name="org/jibx/ws/http/servlet/WsSpringServlet.java" />
+        <include name="org/jibx/ws/http/servlet/WsServlet.java" />
+        <include name="org/jibx/ws/soap/SoapFault.java" />
+        <include name="org/jibx/ws/soap/SoapFaultException.java" />
+        <include name="org/jibx/ws/soap/SoapProtocol.java" />
+        <include name="org/jibx/ws/soap/SoapVersion.java" />
+        <include name="org/jibx/ws/soap/WsNotUnderstoodException.java" />
+        <include name="org/jibx/ws/soap/client/*.java" />
+        <include name="org/jibx/ws/tcp/server/TcpServer.java" />
+        <include name="org/jibx/ws/transport/interceptor/*.java" />
+      </fileset>
+      <classpath>
+        <path refid="compile.classpath" />
+        <path path="${main.src.dir}" />
+      </classpath>
+      <link href="http://jibx.sourceforge.net/api/" />
+      <link href="http://java.sun.com/j2se/1.3/docs/api/" />
+      <link href="http://java.sun.com/j2ee/1.4/docs/api/" />
+      <link href="http://static.springframework.org/spring/docs/2.5.x/api/" />
+    </javadoc>
+  </target>
+
+  <!-- Build the internal javadocs -->
+  <target name="devdoc" description="Create internal Javadocs">
+    <delete quiet="true">
+      <fileset dir="${javadoc.dev.dir}" includes="*" />
+    </delete>
+    <mkdir dir="${javadoc.dev.dir}" />
+    <javadoc packagenames="**"
+             destdir="${javadoc.dev.dir}"
+             author="true"
+             version="true"
+             noindex="true"
+             nohelp="true"
+             notree="true"
+             windowtitle="${project.desc} - Version ${version}"
+             doctitle="${project.desc} - Version ${version}"
+             bottom="&lt;table width='80%%'&gt;&lt;tr&gt;&lt;td width='50%%'&gt;&lt;p align='center'&gt;&lt;a href='http://www.jibx.org/' target='_top'&gt;&lt;font size='3'&gt;&lt;b&gt;Project Web Site&lt;/b&gt;&lt;/font&gt;&lt;/a&gt;&lt;/td&gt;&lt;td width='50%%'&gt;&lt;p align='center'&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;">
+      <classpath>
+        <path refid="test.classpath" />
+        <path refid="bind.classpath" />
+      </classpath>
+      <sourcepath>
+        <path path="${main.src.dir}" />
+        <path path="${test.src.dir}" />
+      </sourcepath>
+      <packageset dir="${main.src.dir}" />
+      <packageset dir="${test.src.dir}" />
+      <link href="http://jibx.sourceforge.net/api/" />
+      <link href="http://java.sun.com/j2se/1.3/docs/api/" />
+      <link href="http://static.springframework.org/spring/docs/2.5.x/api/" />
+    </javadoc>
+  </target>
+
+  <!-- run the site building process -->
+  <target name="build-site" depends="retrieve-build-doc">
+    <echo message="Building the site..."/>
+    <java classname="com.sosnoski.site.Builder" fork="true" dir="${site.doc.src.dir}">
+      <classpath>
+        <fileset dir="${lib.dir}">
+          <include name="jibx-extras.jar"/>
+          <include name="jibx-run.jar"/>
+          <include name="jibxsite.jar"/>
+          <include name="velocity-dep.jar"/>
+          <include name="xpp3.jar"/>
+        </fileset>
+        <path path="${site.doc.src.dir}" />
+      </classpath>
+      <arg value="jibxws-site.xml"/>
+      <arg value="jibxsub-template.vm"/>
+      <arg value="${site.doc.target.dir}"/>
+    </java>
+    <copy todir="${site.doc.target.dir}/style" >
+      <fileset dir="${site.doc.src.dir}/style" />
+    </copy>
+    <copy todir="${site.doc.target.dir}/img" >
+      <fileset dir="${site.doc.src.dir}/img" />
+    </copy>
+  </target>
+
+</project>

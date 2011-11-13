@@ -1,0 +1,29 @@
+apply plugin: 'war'
+apply plugin: 'jetty'
+apply plugin: 'application'
+
+mainClassName = 'org.jibx.ws.starter.client.HelloClient'
+jettyRun.contextPath = '/'
+
+repositories {
+    mavenCentral()
+//    mavenLocal()
+}
+
+configurations {
+  bind
+}
+
+dependencies {
+  bind 'org.jibx:jibx-bind:1.2.3'
+  compile 'org.jibx:jibx-ws:0.9.1'
+}
+
+compileJava.doLast {
+  ant {
+    taskdef(name:'jibxBind', classname: 'org.jibx.binding.ant.CompileTask', classpath: configurations.bind.asPath)
+    jibxBind(binding:'src/main/jibx/hello-binding.xml', classpath: sourceSets.main.classesDir)
+  }
+}
+
+

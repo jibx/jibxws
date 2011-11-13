@@ -1,0 +1,72 @@
+<!-- 
+  An "über" build file that sequentially invokes the build files of all of the examples. 
+  For example, invoking "ant build deploy-tomcat run" will build all of the examples, then deploy them all, 
+  then run them all.
+    
+  This build file has been tested with Ant version 1.6.5.
+ -->
+<project name="JiBX/WS Examples" default="build">
+  <property name="jibxws.examples.dir" value="${basedir}"/>
+  <property file="build.properties"/>
+  <property environment="env"/>
+
+  <available file="${jibxws.lib.spring.dir}/spring-webmvc.jar" property="spring.available" value="true"/>
+  <property name="absolute.spring.lib.dir" location="${jibxws.lib.spring.dir}" />
+  <condition property="spring.availability.message" value="NOTE: Spring examples are excluded since Spring jars not found at ${absolute.spring.lib.dir}">
+    <not>
+      <isset property="spring.available"/>
+    </not>
+  </condition>
+  <property name="spring.availability.message" value="Spring examples are included"/>
+  <echo>${spring.availability.message}</echo>
+
+  <condition property="build.exclusions" value="spring/**/build.xml">
+    <not>
+      <isset property="spring.available"/>
+    </not>
+  </condition>
+
+  <macrodef name="iterate">
+    <attribute name="target" />
+    <sequential>
+      <subant target="@{target}" verbose="on">
+        <fileset dir="." includes="**/build.xml" excludes="${build.exclusions} build.xml" />
+      </subant>
+    </sequential>
+  </macrodef>
+
+  <target name="hello" description="Displays project name and build file location of all examples">
+    <iterate target="hello" />
+  </target>
+
+  <target name="clean" description="Cleans all examples">
+    <iterate target="clean" />
+  </target>
+
+  <target name="javadoc" description="Creates javadoc documentation for all examples">
+    <iterate target="javadoc" />
+  </target>
+  
+  <target name="build" description="Builds all examples">
+    <iterate target="build" />
+    <echo>
+      The '.war' files must now be deployed to your application server. 
+      For Tomcat, running 'ant deploy-tomcat' will copy the '.war' files to the Tomcat server.${line.separator}
+      After deploying the '.war' files, run 'ant run' to run the examples.
+    </echo>
+  </target>
+
+  <target name="clean-tomcat" description="Removes the webapps from Tomcat">
+    <iterate target="clean-tomcat" />
+  </target>
+
+  <target name="deploy-tomcat" description="Copies the war files of all examples to Tomcat's webapps directory">
+    <fail unless="env.CATALINA_HOME" 
+       message="The environment variable CATALINA_HOME must be set to your Tomcat installation directory."/>
+    <iterate target="deploy-tomcat" />
+  </target>
+
+  <target name="run" description="Runs all examples, using their run target">
+    <iterate target="run" />    
+  </target>
+</project>

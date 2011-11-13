@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+	    <groupId>org.jibx.ws.test.helloworld</groupId>
+	    <artifactId>hello-world-reactor</artifactId>
+	    <version>0.9.2-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>org.jibx.ws.test.helloworld.client</artifactId>
+
+    <packaging>bundle</packaging>
+    <name>hello-world-client</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>run</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>org.jibx.ws.test.helloworld.client.HelloClient</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jibx.ws.test.helloworld</groupId>
+            <artifactId>org.jibx.ws.test.helloworld.schema</artifactId>
+            <version>0.9.2-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jibx</groupId>
+            <artifactId>jibx-run</artifactId>
+            <version>1.2.4-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jibx</groupId>
+            <artifactId>jibx-extras</artifactId>
+            <version>1.2.4-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jibx</groupId>
+            <artifactId>xbis-jibx</artifactId>
+            <version>1.2.4-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jibx</groupId>
+            <artifactId>jibx-ws</artifactId>
+            <version>0.9.1</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>

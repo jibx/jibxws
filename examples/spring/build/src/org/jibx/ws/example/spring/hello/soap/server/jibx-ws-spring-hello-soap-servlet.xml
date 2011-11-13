@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="helloService" class="org.jibx.ws.example.spring.hello.soap.server.HelloServer">
+    <property name="greeting" value="Hola"/>
+  </bean>
+  
+  <bean id="serviceDefinition" class="org.jibx.ws.server.ServiceDefinition" init-method="init">
+    <property name="serviceObject" ref="helloService" /> 
+    <property name="operationDefinitions">
+      <list>
+        <bean class="org.jibx.ws.server.OperationDefinition" >
+          <property name="methodName" value="welcomeService" />
+        </bean>
+      </list>
+    </property>
+  </bean>
+  
+  <bean id="serviceMapper" class="org.jibx.ws.http.servlet.SingleServiceMapper"> 
+    <property name="serviceDefinition" ref="serviceDefinition"/>
+  </bean>
+</beans>

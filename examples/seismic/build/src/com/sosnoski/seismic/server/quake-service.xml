@@ -1,0 +1,5 @@
+<service name="quake">
+  <service-class>com.sosnoski.seismic.server.QuakeBase</service-class>
+  <operation method="process"/>
+  <wsdl file="/SeismicService.wsdl" transformLocation="true"/>
+</service>

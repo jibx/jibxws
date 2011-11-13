@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JiBX/WS: Building JiBX/WS</title>
+</head>
+<body class="composite">
+
+<h1>Building JiBX/WS</h1>
+
+<div id="bodycol">
+<div class="app">
+<div class="h3">
+
+<h3><a name="build">Building JiBX/WS</a></h3>
+<p>To build JiBX/WS, either from the distribution or from a SVN image, use the Ant <i>build.xml</i> file in the <i>build</i>
+directory. The default Ant target just rebuilds the <i>lib/jibx-ws.jar</i> file from the source code. The "distrib"
+target builds the actual distribution zip file, while the "develop" target builds the <i>lib/jibx-ws.jar</i> file along
+with internal JavaDocs.</p>
+
+<p>If building from a SVN image, you will need to populate the dep-lib and spring-lib directories with the required dependencies.
+The dependencies are managed using <a href="http://ant.apache.org/ivy/">Apache Ivy</a> and are specified in the 
+<code>ivy.xml</code> file. The "retrieve" target will download the Ivy jar file, if not already downloaded, after which
+it will download the dependent jars to the appropriate directories.</p>
+
+</div>
+</div>
+</div>
+
+</body>
+</html>

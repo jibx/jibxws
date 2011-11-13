@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<project name="jibx-ws-package" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+  <import file="common.xml" />
+  <import file="clean.xml" />
+  <import file="compile.xml" />
+  <import file="doc.xml" />
+
+  <target name="jar" depends="bind, -default-version">
+    <mkdir dir="${package.dir}" />
+    <delete file="${package.file}" quiet="true" />
+    <jar jarfile="${package.file}" basedir="${main.target.dir}" includes="org/jibx/**/*.class, *.properties">
+      <manifest>
+        <attribute name="Built-By" value="${user.name}" />
+        <attribute name="Implementation-Version" value="${version}" />
+      </manifest>
+    </jar>
+  </target>
+
+  <!-- retrieve a copy of just the libraries that are to be included in the distribution -->
+  <target name="-ivy-retrieve-dist-libs" depends="-resolve">
+    <ivy:retrieve pattern="${dist.lib.dir}/[artifact].[ext]" sync="true" conf="bind, runtime, provided, optional" />
+    <ivy:retrieve pattern="${dist.lib.spring.dir}/[artifact].[ext]" sync="true" conf="spring-server, spring-server-aop" />
+    <ivy:retrieve pattern="${dist.lib.minimal.dir}/[artifact].[ext]" sync="true" conf="compile-non-jibx"  />
+  </target>
+
+  <!-- Generate a resolved ivy.xml to include in the distribution file for Ivy users of JiBX/WS. -->
+  <target name="-create-resolved-ivy-xml" depends="-resolve, -default-version">
+    <ivy:deliver deliverpattern="${target.dir}/[artifact].[ext]" pubrevision="${version}" status="${status}" pubdate="${timestamp}"/>
+  </target>
+
+  <!-- Build the zip file for distribution -->
+  <target name="zip-distrib" depends="clean, -release-version, jar, build-site, javadoc, -ivy-retrieve-dist-libs, -create-resolved-ivy-xml">
+    <property name="dist.name" value="${project.name}-${version}" />
+    <mkdir dir="${dist.dir}" />
+    
+    <!-- With dependencies -->
+    <delete file="${dist.dir}/${dist.name}-with-deps.zip" />
+    <zip zipfile="${dist.dir}/${dist.name}-with-deps.zip">
+      <zipfileset prefix="jibxws/build" dir="${basedir}/build" />
+      <zipfileset prefix="jibxws/docs" dir="${doc.target.dir}" />
+      <zipfileset prefix="jibxws/examples" dir="${basedir}/examples" excludes="**/classes/**/*,**/*.war" />
+      <zipfileset prefix="jibxws/starter" dir="${basedir}/starter" excludes="**/classes/**/*,**/*.war" />
+      <zipfileset prefix="jibxws/dep-lib" dir="${dist.lib.dir}" />
+      <zipfileset prefix="jibxws/lib" dir="${package.dir}" />
+      <zipfileset prefix="jibxws/spring-lib" dir="${dist.lib.spring.dir}" />
+      <zipfileset prefix="jibxws" file="${target.dir}/ivy.xml" />
+      <zipfileset prefix="jibxws" file="${site.doc.src.dir}/readme.html" />
+    </zip>
+
+    <!-- Minimal dependencies -->
+    <delete file="${dist.dir}/${dist.name}-minimal.zip" />
+    <zip zipfile="${dist.dir}/${dist.name}-minimal.zip">
+      <zipfileset prefix="jibxws/build" dir="${basedir}/build" />
+      <zipfileset prefix="jibxws/docs" dir="${doc.target.dir}" />
+      <zipfileset prefix="jibxws/examples" dir="${basedir}/examples" excludes="**/classes/**/*,**/*.war" />
+      <zipfileset prefix="jibxws/starter" dir="${basedir}/starter" excludes="**/classes/**/*,**/*.war" />
+      <zipfileset prefix="jibxws/dep-lib" dir="${dist.lib.minimal.dir}" excludes="**/*jibx*.jar" />
+      <zipfileset prefix="jibxws/lib" dir="${package.dir}" />
+      <zipfileset prefix="jibxws" file="${target.dir}/ivy.xml" />
+      <zipfileset prefix="jibxws" file="${site.doc.src.dir}/readme.html" />
+    </zip>
+  </target>
+
+</project>

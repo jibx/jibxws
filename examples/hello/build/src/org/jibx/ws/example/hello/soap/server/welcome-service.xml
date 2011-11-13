@@ -1,0 +1,4 @@
+<service name="jibxws.example.hello">
+  <service-class>org.jibx.ws.example.hello.soap.server.HelloServer</service-class>
+  <operation method="welcomeService"/>
+</service>

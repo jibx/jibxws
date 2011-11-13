@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<project name="jibx-ws-publish" 
+  xmlns:ivy="antlib:org.apache.ivy.ant" 
+  xmlns:maven="antlib:org.apache.maven.artifact.ant">
+
+  <import file="package.xml" />
+  
+  <target name="publish-ivy-local" depends="-resolve, -local-version, jar" description="publish this project in the ivy repository">
+    <!--copy file="${ivy.file}" todir="${target.dir}" /-->
+    <ivy:publish conf="bind,compile,run,spring-server" artifactspattern="${package.dir}/[artifact].[ext]" resolver="local" pubdate="${timestamp}" pubrevision="${version}" status="${status}" forcedeliver="true" overwrite="true"/>
+    <!--echo message="project ${ant.project.name} released with version ${version}" /-->
+  </target>
+
+  <target name="-makepom" depends="-resolve, -default-version">
+    <ivy:deliver conf="compile,provided,runtime,optional,test,spring-server,spring-server-aop" pubrevision="${version}" deliverpattern="${target.dir}/[artifact].[ext]"/>
+    <property name="generated.pom.file" value="${target.dir}/${project.name}.pom" />
+    <delete file="${generated.pom.file}"/>
+    <ivy:makepom ivyfile="${target.dir}/ivy.xml" pomfile="${generated.pom.file}">
+      <mapping conf="bind" scope="compile" />
+      <mapping conf="compile" scope="compile" />
+      <mapping conf="provided" scope="provided" />
+      <mapping conf="runtime" scope="runtime" />
+      <mapping conf="run-client" scope="runtime" />
+      <mapping conf="test" scope="test" />
+    </ivy:makepom>
+    <echo>Generated pom ${generated.pom.file} with version ${version}</echo>
+  </target>
+
+  <target name="-augmentpom" depends="-makepom">
+    <xslt in="${generated.pom.file}" out="${generated.pom.file}.new" style="${build.dir}/ant/pom-transform.xslt" force="true"/>
+    <move file="${generated.pom.file}.new" tofile="${generated.pom.file}" />
+  </target>
+  
+  <target name="-publish-maven" depends="-maven-init">
+    <maven:install-provider artifactId="wagon-ssh" version="1.0-beta-2" />
+    <maven:deploy file="${package.file}" uniqueVersion="false" >
+      <pom file="${generated.pom.file}"/>
+      <remoteRepository id="sourceforge.net" url="${maven.repo.url}" />
+    </maven:deploy>
+  </target>
+    
+  <target name="publish-maven-snapshot" depends="-snapshot-version, -makepom, -augmentpom, jar" description="publish a snapshot release to the JiBX snapshot Maven repository">
+    <antcall target="-publish-maven">
+      <param name="maven.repo.url" value="sftp://web.sourceforge.net/home/groups/j/ji/jibx/htdocs/maven2-snapshots" />
+    </antcall>
+  </target>
+
+  <target name="publish-maven-release" depends="-release-version, -makepom, -augmentpom" description="publish a release to the JiBX Maven repository - assumes jar already built so doesn't rebuild!!">
+    <antcall target="-publish-maven">
+      <param name="maven.repo.url" value="sftp://web.sourceforge.net/home/groups/j/ji/jibx/htdocs/maven2" />
+    </antcall>
+  </target>
+
+</project>

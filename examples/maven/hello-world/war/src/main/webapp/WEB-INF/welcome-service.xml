@@ -1,0 +1,4 @@
+<service name="jibxws.starter">
+  <service-class>org.jibx.ws.test.helloworld.server.HelloService</service-class>
+  <operation method="welcome"/>
+</service>

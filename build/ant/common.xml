@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<project name="jibx-ws-common" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+  <property environment="env" />
+  <property file="${build.dir}/build.properties" />
+
+  <property name="ivy.install.version" value="2.1.0" />
+  <property name="ivy.jar.dir" value="${user.home}/.ivy2" />
+  <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy-${ivy.install.version}.jar" />
+  <available property="ivy.jar.exists" file="${ivy.jar.file}" />
+
+  <tstamp>
+    <format property="timestamp" pattern="yyyyMMddHHmmss" timezone="UTC"/>
+  </tstamp>
+
+  <!-- The following block is intended to set the jibx.lib.dir location. 
+   It checks for the JiBX libraries in the the following order, setting jibx.lib.dir to 
+   the first directory containing the JiBX libraries:
+   1) in the dep-lib directory of the JiBX/WS distribution (jibxws/dep-lib)
+   2) in the lib directory of the parent directory of the JiBX/WS distribution 
+     (for the case where JiBX/WS is installed as a child directory of JiBX) (jibxws/../lib)
+   3) in the lib subdirectory of the directory referenced by JIBX_HOME environmental variable ($JIBX_HOME/lib)
+   If you prefer to just set the path directly in this file, uncomment the following
+   line and set the value to the appropriate directory, then delete the rest of the Ant
+   commands down to the end of this block. -->
+  <available file="${lib.dir}/jibx-bind.jar"   property="jibx.lib.dir" value="${lib.dir}"/>
+  <property name="jibxws.parent.dir" location="${basedir}/.."/>
+  <condition property="jibx.lib.dir" value="${jibxws.parent.dir}/lib">
+    <and>
+      <not>
+        <isset property="jibx.lib.dir"/>
+      </not>
+      <available file="${jibxws.parent.dir}/lib/jibx-bind.jar"/>
+    </and>
+  </condition>
+  <property environment="env"/>
+  <condition property="jibx.lib.dir" value="${env.JIBX_HOME}/lib">
+    <and>
+      <not>
+        <isset property="jibx.lib.dir"/>
+      </not>
+      <available file="${env.JIBX_HOME}/lib/jibx-bind.jar"/>
+    </and>
+  </condition>
+
+  <target name="-check-jibx-lib-dir">
+    <property name="resolved.jibxws.lib.dir" location="${lib.dir}"/>
+    <fail unless="jibx.lib.dir" 
+       message="Unable to find JiBX libraries in the following locations:${line.separator}
+    1) ${resolved.jibxws.lib.dir}${line.separator}
+    2) ${jibxws.parent.dir}/lib${line.separator}
+    3) lib subdirectory of JIBX_HOME environment variable (which equates to ${env.JIBX_HOME}/lib)${line.separator}
+  ${line.separator}
+    To correct this, either:${line.separator}
+    1) run 'ant retrieve' (without the quotes) to download the dependencies, or${line.separator}
+    2) install JiBX/WS in a direct subdirectory of the JiBX distribution, or${line.separator}
+    3) set the environment variable JIBX_HOME to reference an existing JiBX distribution, or${line.separator}
+    4) download the 'with-deps' JiBX/WS distribution, which contains all of the dependent jar files.${line.separator}
+      ${line.separator}
+    Building JiBX/WS also requires servlet-api and Spring jars (though these are not needed for running examples). ${line.separator}
+    Running 'ant retrieve' or downloading the 'with-deps' distribution will provide all necessary jars."
+    />
+    <!-- End of jibx-home location setting block. -->
+  </target>
+  
+  <target name="-ivy-download" unless="ivy.jar.exists">
+    <mkdir dir="${ivy.jar.dir}" />
+    <property name="ivy.url"
+              value="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" />
+    <get src="${ivy.url}" dest="${ivy.jar.file}" usetimestamp="true" />
+  </target>
+
+  <target name="-ivy-install" depends="-ivy-download">
+    <path id="ivy.lib.path">
+      <fileset dir="${ivy.jar.dir}" includes="ivy-${ivy.install.version}.jar" />
+    </path>
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+  </target>
+
+  <target name="-ivy-init" depends="-ivy-install">
+    <ivy:settings file="${ivysettings.file}" />
+  </target>
+
+  <target name="-resolve" depends="-ivy-init">
+    <ivy:resolve file="${ivy.file}" />
+  </target>
+
+  <!-- Use Ivy to download dependencies, which will be stored in the lib directory. -->
+  <target name="retrieve" description="Download the dependencies" depends="-resolve">
+    <echo>Retrieving files using Ivy</echo>
+    <ivy:retrieve pattern="${lib.dir}/[artifact].[ext]" sync="true" conf="test, provided, optional, bind" />
+    <ivy:retrieve pattern="${lib.spring.dir}/[artifact].[ext]" sync="true" conf="spring-server, spring-server-aop" />
+    <!--ivy:report todir="${ivy.report.dir}" /-->
+  </target>
+  
+  <!-- Use Ivy to download dependencies for building the documentation. -->
+  <target name="retrieve-build-doc" description="Download the dependencies for building docs" depends="-resolve">
+    <echo>Retrieving files using Ivy</echo>
+    <ivy:retrieve pattern="${lib.dir}/[artifact].[ext]" conf="build-doc" />
+  </target>
+  
+  <target name="-maven-init" depends="-ivy-init">
+    <ivy:cachepath organisation="org.apache.maven" module="maven-ant-tasks" revision="2.0.10" inline="true" conf="default" transitive="false" pathid="maven.ant.tasks.classpath" />
+    <taskdef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpathref="maven.ant.tasks.classpath" />
+  </target>
+
+  <target name="-local-version">
+    <property name="version" value="${project.version.target}-local-${timestamp}" />
+    <property name="status" value="integration" />
+  </target>
+
+  <target name="-snapshot-version">
+    <property name="version" value="${project.version.target}-SNAPSHOT" />
+    <property name="status" value="integration" />
+  </target>
+
+  <target name="-release-version">
+    <property name="version" value="${project.version.target}" />
+    <property name="status" value="release" />
+  </target>
+  
+  <target name="-default-version" unless="version" depends="-local-version" />
+    
+</project>

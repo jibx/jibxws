@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Ivy dependency file  for the JiBX/WS specification.
+-->
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+  <info organisation="org.jibx" module="jibx-ws-spec">
+    <license name="BSD style" url="http://jibx.sourceforge.net/jibx-license.html" />
+    <ivyauthor name="Nigel Charman" />
+    <description homepage="http://jibx.sourceforge.net/">
+      JiBX/WS is a web services framework built around
+      <a href="http://jibx.sourceforge.net/">JiBX</a>
+      data binding. It provides the same advantages of flexibility and performance to developers implementing web
+      services as the base JiBX project does for ordinary XML data binding.
+    </description>
+  </info>
+
+  <!--N-TODO fix so it does not need jibx-ws configurations to be respecified -->
+  <configurations>
+    <conf name="test" visibility="private" 
+      description="Describes modules needed to compile and run the tests for this project." />
+    <conf name="compile" 
+      description="Describes modules needed to compile the source of this project, excluding the test source." />
+   <conf name="provided" description="this is much like compile, but indicates you expect the JDK or a container to provide it. It is only available on the compilation classpath, and is not transitive."/>
+   <conf name="bind"     description="Describes modules needed to perform the JiBX class binding." />
+   <conf name="bind-jdk1.3" extends="bind"
+      description="Describes modules needed to perform the JiBX class binding when using JDK 1.3." />
+   <conf name="runtime" extends="compile" description="Describes modules needed to execute this project." />
+   <conf name="spring-server" extends="optional" description="Describes modules needed to configure the server side using Spring Framework."/>
+   <conf name="spring-server-aop" extends="spring-server" description="Describes modules needed to configure the server side using Spring Framework and use AOP for request scoped beans."/>
+   <conf name="optional" description="Optional modules." />
+  </configurations>
+  
+  <dependencies>
+    <dependency org="org.jibx" name="jibx-ws" rev="latest.integration" conf="test->default" />
+    <dependency org="org.concordion" name="concordion" rev="1.3.1" conf="test->default" />
+  </dependencies>
+</ivy-module>

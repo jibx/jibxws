@@ -1,0 +1,39 @@
+<!--
+Ant build file for JiBX/WS Spring hello example using the SOAP protocol.
+
+This build file "extends" the build file at ../../../common.xml.  Run "ant -p" to view the full list of available targets.
+-->
+<project name="JiBX/WS Spring Hello SOAP Example" default="build">
+  <property name="jibxws.examples.dir" value="../../.."/>
+  <property name="client.classname" value="org.jibx.ws.example.spring.hello.soap.client.HelloClient"/>
+  <property name="client.src.includes" value="**/soap/client/*.*" />
+  <property name="client.file.includes" value="**/soap/client/hello_client_config.xml" />
+  <property name="server.src.includes" value="**/soap/server/*.*" />
+  <property name="web-inf.file.includes" value="**/soap/server/*.xml" />
+  <property name="warname" value="jibx-ws-spring-hello-soap"/>
+  <property name="root" value="${basedir}/.." description="Root folder of example"/>
+
+  <fileset id="binding.fileset" file="../src/org/jibx/ws/example/spring/hello/common/hello-binding.xml"/>
+
+  <target name="-init">
+    <!-- Initialize client classpath extension jars -->
+    <path id="client-classpath-ext">
+      <pathelement location="${jibxws.lib.spring.dir}/spring-beans.jar" />
+      <pathelement location="${jibxws.lib.spring.dir}/spring-core.jar" />
+      <pathelement location="${jibxws.lib.spring.dir}/spring-context.jar" />
+      <pathelement location="${jibxws.lib.spring.dir}/spring-web.jar" />
+      <pathelement location="${jibxws.lib.spring.dir}/spring-webmvc.jar" />
+    </path>
+  </target>
+
+  <target name="-war-ext">
+    <!--copy file="${jibxws.lib.dir}/spring-aop.jar" todir="${war.lib.dir}" /-->
+    <copy file="${jibxws.lib.spring.dir}/spring-beans.jar" todir="${war.lib.dir}" />
+    <copy file="${jibxws.lib.spring.dir}/spring-core.jar" todir="${war.lib.dir}" />
+    <copy file="${jibxws.lib.spring.dir}/spring-context.jar" todir="${war.lib.dir}" />
+    <copy file="${jibxws.lib.spring.dir}/spring-web.jar" todir="${war.lib.dir}" />
+    <copy file="${jibxws.lib.spring.dir}/spring-webmvc.jar" todir="${war.lib.dir}" />
+  </target>
+  
+  <import file="${jibxws.examples.dir}/common.xml" />
+</project>

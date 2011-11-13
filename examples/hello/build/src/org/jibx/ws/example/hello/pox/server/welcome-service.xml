@@ -1,0 +1,4 @@
+<service name="jibxws.example.hello" protocol="POX">
+  <service-class>org.jibx.ws.example.hello.pox.server.HelloServer</service-class>
+  <operation method="welcomeService"/>
+</service>

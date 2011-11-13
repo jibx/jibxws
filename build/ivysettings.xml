@@ -1,0 +1,24 @@
+<!--
+  Ivy settings file  for JiBX/WS to search Jibx sourceforge Maven 1 repository in addition to the public Maven 2 repository.
+  
+  N-TODO remove Maven 1 repo
+-->
+<ivysettings>
+  <settings defaultResolver="public" />
+  <include url="${ivy.default.settings.dir}/ivysettings-local.xml"/>
+  <latest-strategies>
+    <latest-time name="jibx-latest" />
+  </latest-strategies>
+  <resolvers>
+    <ibiblio name="public" m2compatible="true" />
+    <chain name="publicAndJibx" returnFirst="false" latest="jibx-latest">
+      <url name="jibx.sf" latest="jibx-latest">
+        <artifact pattern="http://jibx.sourceforge.net/maven/jibx/jars/[artifact]-[revision].[ext]" />
+      </url>
+      <ibiblio name="public" m2compatible="true" latest="jibx-latest"/>
+    </chain>
+  </resolvers>
+  <modules>
+    <module organisation="org.jibx" name="*" resolver="publicAndJibx" />
+  </modules>
+</ivysettings>

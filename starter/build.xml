@@ -1,0 +1,199 @@
+<!-- 
+  An Ant build file for the JiBX/WS starter project.
+  
+  This build file has been tested with Ant version 1.6.5.
+ -->
+<project name="JiBX/WS starter" default="build" basedir=".">
+
+  <property file="build.properties" />
+  <property environment="env" />
+
+  <property name="warname" value="jibx-ws-starter"/>
+  <property name="binding.file" value="hello-binding.xml"/>
+  <property name="client.classname" value="org.jibx.ws.starter.client.HelloClient"/>
+
+  <!-- The following block is intended to set the jibx.lib.dir location. 
+   It checks for the JiBX libraries in the the following order, setting jibx.lib.dir to 
+   the first directory containing the JiBX libraries:
+   1) in the dep-lib directory of the JiBX/WS distribution (jibxws/dep-lib)
+   2) in the lib directory of the parent directory of the JiBX/WS distribution 
+     (for the case where JiBX/WS is installed as a child directory of JiBX) (jibxws/../lib)
+   3) in the lib subdirectory of the directory referenced by JIBX_HOME environmental variable ($JIBX_HOME/lib)
+   If you prefer to just set the path directly in this file, uncomment the following
+   line and set the value to the appropriate directory, then delete the rest of the Ant
+   commands down to the end of this block. -->
+<!--  <property name="jibx.lib.dir" value="jibx-home-directory-path/lib"/> -->
+  <available file="${jibxws.lib.dir}/jibx-bind.jar" property="jibx.lib.dir" value="${jibxws.lib.dir}"/>
+  <property name="jibxws.parent.dir" location="${jibxws.dir}/.."/>
+  <condition property="jibx.lib.dir" value="${jibxws.parent.dir}/lib">
+    <and>
+      <not>
+        <isset property="jibx.lib.dir"/>
+      </not>
+      <available file="${jibxws.parent.dir}/lib/jibx-bind.jar"/>
+    </and>
+  </condition>
+  <condition property="jibx.lib.dir" value="${env.JIBX_HOME}/lib">
+    <and>
+      <not>
+        <isset property="jibx.lib.dir"/>
+      </not>
+      <available file="${env.JIBX_HOME}/lib"/>
+    </and>
+  </condition>
+  <property name="resolved.jibxws.lib.dir" location="${jibxws.lib.dir}"/>
+  <fail unless="jibx.lib.dir" 
+     message="Unable to find JiBX libraries in the following locations:${line.separator}
+  1) ${resolved.jibxws.lib.dir}${line.separator}
+  2) ${jibxws.parent.dir}/lib${line.separator}
+  3) lib subdirectory of directory referenced by JIBX_HOME environment variable (which resolves to ${env.JIBX_HOME}/lib)${line.separator}
+${line.separator}
+  To correct this, either:${line.separator}
+  1) run 'ant retrieve' (without the quotes) from the jibxws/build directory to download the dependencies, or${line.separator}
+  2) install JiBX/WS in a direct subdirectory of the JiBX distribution, or${line.separator}
+  3) set the environment variable JIBX_HOME to reference an existing JiBX distribution, or${line.separator}
+  4) download the 'with-deps' JiBX/WS distribution, which contains all of the dependent jar files"
+  />
+  <echo level="debug">JiBX library directory set to ${jibx.lib.dir}</echo>
+
+  <!-- Directories and files -->
+  <property name="src.dir" value="${basedir}/src/main/java" description="basedir directory of example source code" />
+  <property name="binding.dir" value="${basedir}/src/main/jibx" description="directory containing jibx bindings" />
+  <property name="common.src.includes" value="org/jibx/ws/starter/*.java" description="Source files common to client and server" />
+  <property name="client.src.includes" value="org/jibx/ws/starter/client/*.java" description="Source files specific to client" />
+  <property name="server.src.includes" value="org/jibx/ws/starter/server/*.java" description="Source files specific to server"/>
+  <property name="webapp.src.dir" value="${basedir}/src/main/webapp" description="Source folder for web app files"/>
+  <property name="web-inf.file.includes" value="WEB-INF/*" description="Files to include in WEB-INF directory"/>
+  <property name="client.dest.dir" value="${basedir}/classes" />
+  <property name="war.dir" value="${basedir}" />
+  <property name="web-inf.dir" location="${war.dir}/WEB-INF" />
+  <property name="war.lib.dir" location="${web-inf.dir}/lib" />
+  <property name="war.file" location="${war.dir}/${warname}.war" />
+  <property name="server.dest.dir" value="${web-inf.dir}/classes" />
+
+  <!-- Client classpath -->
+  <path id="client-classpath">
+    <pathelement location="${client.dest.dir}" />
+    <pathelement location="${jibxws.dist.dir}/jibx-ws.jar" />
+    <pathelement location="${jibx.lib.dir}/jibx-run.jar" />
+    <!-- xpp3.jar only required if using the XPP3 XMLPullParser. -->
+    <pathelement location="${jibx.lib.dir}/xpp3.jar" />
+    <!-- xbis-jibx.jar only required if using the XBIS encoding format -->
+    <pathelement location="${jibx.lib.dir}/xbis-jibx.jar" />
+    <pathelement location="${jibxws.lib.dir}/commons-logging.jar" />
+    <!-- log4j.jar only required if using log4j with commons-logging -->
+    <pathelement location="${jibx.lib.dir}/log4j.jar" />
+  </path>
+
+  <!-- Server classpath -->
+  <path id="server-classpath">
+    <pathelement location="${server.dest.dir}" />
+    <pathelement location="${jibxws.dist.dir}/jibx-ws.jar" />
+    <pathelement location="${jibx.lib.dir}/jibx-run.jar" />
+    <!--pathelement location="${jibxws.lib.dir}/servletapi.jar" /-->
+    <pathelement location="${jibxws.lib.dir}/commons-logging.jar" />
+  </path>
+
+  <!-- JiBX binding compiler task definition -->
+  <taskdef name="bind" classname="org.jibx.binding.ant.CompileTask">
+    <classpath>
+      <pathelement location="${jibx.lib.dir}/bcel.jar" />
+      <pathelement location="${jibx.lib.dir}/jibx-bind.jar" />
+      <pathelement location="${jibx.lib.dir}/jibx-run.jar" />
+      <pathelement location="${jibx.lib.dir}/xpp3.jar" />
+    </classpath>
+  </taskdef>
+
+  <!-- Delete existing client class files -->
+  <target name="clean-client">
+    <delete dir="${client.dest.dir}" />
+  </target>
+
+  <!-- Compile and bind the client project -->
+  <target name="compile-client">
+    <mkdir dir="${client.dest.dir}" />
+    <javac srcdir="${src.dir}"
+           includes="${common.src.includes},${client.src.includes}"
+           destdir="${client.dest.dir}"
+           deprecation="on"
+           debug="on"
+           optimize="on">
+      <classpath refid="client-classpath" />
+    </javac>
+    <bind binding="${binding.dir}/${binding.file}">
+      <classpath refid="client-classpath" />
+    </bind>
+    <copy todir="${client.dest.dir}">
+      <fileset dir="${basedir}" includes="commons-logging.properties, log4j.properties" />
+    </copy>
+  </target>
+
+  <!-- Run the test client -->
+  <target name="run" depends="compile-client" description="Runs client class">
+    <java classname="${client.classname}" classpathref="client-classpath" fork="true">
+      <arg value="http://${http.target.host}:${http.target.port}" />
+      <arg value="jibx-ws-starter/welcome-service" />
+    </java>
+  </target>
+
+  <!-- Delete existing server class files -->
+  <target name="clean-server">
+    <delete dir="${web-inf.dir}" />
+    <delete file="${war.file}" />
+  </target>
+
+  <!-- Compile and bind the server project -->
+  <target name="compile-server">
+    <mkdir dir="${server.dest.dir}" />
+    <javac srcdir="${src.dir}"
+           includes="${common.src.includes},${server.src.includes}"
+           destdir="${server.dest.dir}"
+           deprecation="on"
+           debug="on"
+           optimize="on">
+      <classpath refid="server-classpath" />
+    </javac>
+    <bind binding="${binding.dir}/${binding.file}">
+      <classpath refid="server-classpath" />
+    </bind>
+  </target>
+
+  <!-- Build the war file for distribution -->
+  <target name="war" depends="compile-server">
+    <mkdir dir="${war.lib.dir}" />
+    <delete file="${war.dir}/${warname}.war" quiet="true" />
+    <copy todir="${web-inf.dir}" flatten="true">
+      <fileset dir="${webapp.src.dir}" includes="${web-inf.file.includes}" />
+    </copy>
+    <copy file="${jibxws.dist.dir}/jibx-ws.jar" todir="${war.lib.dir}" />
+    <copy file="${jibx.lib.dir}/jibx-run.jar" todir="${war.lib.dir}" />
+    <copy file="${jibx.lib.dir}/jibx-extras.jar" todir="${war.lib.dir}" />
+    <!-- xbis-jibx.jar only required if using the XBIS encoding format -->
+    <copy file="${jibx.lib.dir}/xbis-jibx.jar" todir="${war.lib.dir}" />
+    <!-- xpp3.jar only required if using the XPP3 XMLPullParser. -->
+    <copy file="${jibx.lib.dir}/xpp3.jar" todir="${war.lib.dir}" />
+    <copy file="${jibxws.lib.dir}/commons-logging.jar" todir="${war.lib.dir}" />
+    <!-- log4j.jar only required if using log4j with commons-logging -->
+    <copy file="${jibx.lib.dir}/log4j.jar" todir="${war.lib.dir}" />
+    <jar destfile="${war.file}" basedir="${basedir}" includes="WEB-INF/**" />
+    <delete file="${war.lib.dir}/*.jar" />
+  </target>
+
+  <target name="deploy-tomcat" description="Copies war file to Tomcat's webapps directory">
+    <fail unless="env.CATALINA_HOME" 
+       message="The environment variable CATALINA_HOME must be set to your Tomcat installation directory."/>
+    <copy file="${war.file}" todir="${env.CATALINA_HOME}/webapps" verbose="on" />
+  </target>
+
+  <target name="build-server" depends="clean-server,compile-server,war" description="Builds server"/>
+  <target name="build-client" depends="clean-client,compile-client" description="Builds client"/>
+  <target name="clean" depends="clean-client,clean-server" description="Cleans all output"/>
+
+  <target name="build" depends="build-server,build-client" description="Builds client and server">
+    <echo>
+      The jibx-ws-starter.war file must now be deployed to your application server. 
+      For Tomcat, running 'ant deploy-tomcat' will copy the jibx-ws-starter.war files to the Tomcat server.${line.separator}
+      After deploying the jibx-ws-starter.war files, run 'ant run' to run the examples.
+    </echo>
+  </target>
+</project>

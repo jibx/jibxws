@@ -1,0 +1,12 @@
+<service name="jibxws.example.hello">
+  <service-class>org.jibx.ws.example.headers.server.HelloServer</service-class>
+  <operation method="welcomeService"/>
+  <handler-class class="org.jibx.ws.io.handler.ContextAttributeUnmarshallingInHandler">
+    <constructor-arg value="org.jibx.ws.example.headers.common.Locale"/>
+    <constructor-arg value="example.locale"/>
+  </handler-class>
+  <handler-class class="org.jibx.ws.io.handler.ContextAttributeMarshallingOutHandler">
+    <constructor-arg value="org.jibx.ws.example.headers.common.QOS"/>
+    <constructor-arg value="comm.qos"/>
+  </handler-class>
+</service>

@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+
+<project name="jibx-ws-test">
+
+  <import file="compile.xml" />
+
+  <!-- Extra classpath settings for compiling with old JDKs.  Defaults to no extra classpath. -->
+  <path id="test.extra.classpath" />
+
+  <!-- Properties to allow tests to be excluded when compiling with old JDKs. Default to no exclusions. -->
+  <property name="exclude.tests" value="" />
+
+  <path id="test.classpath">
+    <path refid="compile.classpath" />
+    <pathelement location="${lib.dir}/junit.jar" />
+    <pathelement location="${lib.dir}/xmlunit.jar" />
+    <pathelement location="${lib.dir}/xpp3.jar" />
+    <pathelement location="${lib.dir}/spring-mock.jar" />
+    <pathelement location="${lib.dir}/mockito-all.jar" />
+    <pathelement location="${lib.dir}/commons-io.jar" />
+    <pathelement location="${lib.dir}/concordion.jar" />
+    <pathelement location="${lib.dir}/ognl.jar" />
+    <pathelement location="${lib.dir}/xom.jar" />
+    <pathelement location="${lib.dir}/javassist.jar" />
+    <path refid="test.extra.classpath" />
+    <path path="${main.target.dir}" />
+  </path>
+
+  <!-- Compile the tests -->
+  <target name="compile.test" depends="compile">
+    <mkdir dir="${test.target.dir}"/>
+    <javac srcdir="${test.src.dir}"
+           destdir="${target.dir}/test-classes"
+           includes="org/jibx/**/*.java"
+           excludes="${exclude.tests}"
+           debug="${debug}"
+           deprecation="on">
+      <classpath>
+        <path refid="test.classpath" />
+        <path refid="bind.classpath" />
+        <!-- Since the tests dynamically run the binding compiler -->
+      </classpath>
+    </javac>
+    <copy todir="${test.target.dir}">
+      <fileset dir="${test.src.dir}" includes="**/*binding.xml" />
+      <fileset dir="${test.src.dir}" includes="**/*.html" />
+      <fileset dir="${test.src.dir}" includes="**/*.properties" />
+    </copy>
+  </target>
+
+  <!-- Run the JiBX binding compiler on the unit test code.  This is no longer required, since the unit tests
+       dynamically run the binding compiler. However, for better performance, this target can be run first
+       to bind the tests, then the tests can be run with the system property org.jibx.ws.test.loadBindings
+       set to false. -->
+  <target name="bind.test" depends="compile.test, bind">
+    <taskdef name="bind" classname="org.jibx.binding.ant.CompileTask">
+      <classpath refid="bind.classpath" />
+    </taskdef>
+    <bind>
+      <classpath>
+        <path refid="test.classpath" />
+        <path path="${test.target.dir}" />
+      </classpath>
+      <bindingfileset dir="${test.src.dir}">
+        <include name="**/*-binding.xml" />
+      </bindingfileset>
+    </bind>
+  </target>
+
+  <!-- Unit test the code -->
+  <target name="unit.test" depends="bind.test" description="Run all the unit tests">
+    <delete dir="${test.results.dir}" />
+    <mkdir dir="${test.results.dir}" />
+    <junit fork="true"
+           forkmode="perBatch"
+           printsummary="true"
+           errorProperty="test.failed"
+           failureProperty="test.failed"
+           dir=".">
+      <sysproperty key="org.jibx.ws.test.loadBindings" value="false"/>
+      <classpath>
+        <path refid="bind.classpath" />
+        <path location="${main.src.dir}" />
+        <!-- Since the tests dynamically run the binding compiler -->
+        <path refid="test.classpath" />
+        <path path="${test.target.dir}" />
+      </classpath>
+      <formatter type="brief" usefile="false" />
+      <formatter type="xml" />
+      <batchtest todir="${test.results.dir}">
+        <fileset dir="${test.src.dir}" includes="**/*Test.java" excludes="${exclude.tests}" />
+      </batchtest>
+    </junit>
+    <fail message="Tests failed: check test reports." if="test.failed" />
+  </target>
+
+  <!-- Test the code.  Currently this just runs the unit tests, but may be extended to include integration tests
+       in future -->
+  <target name="test" depends="unit.test" description="Run all the JiBX/WS tests" />
+
+</project>

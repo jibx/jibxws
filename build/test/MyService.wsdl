@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:jwt="http://jibxws.org/test/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://jibxws.org/test/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://jibxws.org/test/">
+      <xsd:element name="MyRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="in" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="MyResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="out" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="MyRequestMessage">
+    <wsdl:part element="jwt:MyRequest" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="MyResponseMessage">
+    <wsdl:part element="jwt:MyResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:portType name="MyServiceInterface">
+    <wsdl:operation name="MyServiceRequest">
+      <wsdl:input message="jwt:MyRequestMessage"/>
+      <wsdl:output message="jwt:MyResponseMessage"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MyServiceBinding" type="jwt:MyServiceInterface">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="MyServiceRequest">
+      <soap:operation soapAction="http://jibxws.org/test/MyServiceRequest"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MyService">
+    <wsdl:port binding="jwt:MyServiceBinding" name="MyServicePort">
+      <soap:address location="$serviceLocation$"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

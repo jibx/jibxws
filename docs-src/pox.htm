@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JiBX/WS: POX</title>
+</head>
+<body class="composite">
+
+<h1>POX</h1>
+
+<div id="bodycol">
+<div class="app">
+<div class="h3">
+
+<h3>POX Specific Features</h3>
+
+<p>JiBX/WS supports POX (Plain Old XML) services.  The input and output messages consist solely of the XML payload without any additional data such as SOAP envelope. </p>
+
+<h3><a name="server">POX server</a></h3>
+
+<p>To create a POX server, specify the <a href="%define%#protocol">protocol</a> in the service definition to be <b>POX</b>. 
+<p>SOAP specific features of the service definition, 
+such as SOAP header handlers and SOAP fault handlers, are not supported.  All other features of the service definition are supported.</p>
+
+<h4><a name="exception">Exception handling</a></h4>
+
+<p>By default, a runtime exception of type <a href="%api%/org/jibx/ws/UnhandledWsException.html">UnhandledWsException</a>
+will be thrown whenever the  service class throws an exception, or an error occurs in the handling of the POX message 
+(for example invalid message format).  This behavior can be overridden by implementing a custom 
+<a href=%define%#service-exception-handler-class>service exception handler</a>.</p>
+
+<h3><a name="server">POX client</a></h3>
+<p>To create a POX client, either use the <a href="%api%/org/jibx/ws/pox/client/PoxClient.html">PoxClient</a> class
+directly, or via the <a href="%api%/org/jibx/ws/pox/PoxProtocol.html">PoxProtocol</a> implementation of the 
+<a href="%api%/org/jibx/ws/protocol/Protocol.html#createClient(java.lang.String, org.jibx.runtime.IBindingFactory, org.jibx.ws.io.MessageOptions)">Protocol.createClient()</a> method.</p>
+
+<h3><a name="example">Examples</a></h3>
+<p>The <a href="%example%#pox-hello">POX Hello</a> example demonstrates a basic POX client and server, using the <code>org.jibx.ws.pox.client.PoxClient</code> class directly.</p>
+
+<p>The <a href="%example%#seismic">Seismic</a> example demonstrates a more complete application that uses the factory method to select either a SOAP or POX client.</p> 
+ 
+
+</div>
+</div>
+</div>
+
+</body>
+</html>

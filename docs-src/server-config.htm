@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JiBX/WS: Server Configuration</title>
+</head>
+<body class="composite">
+
+<h1>Server Configuration</h1>
+
+<div id="bodycol">
+<div class="app">
+<div class="h3">
+
+<h3>Server Configuration Details</h3>
+<p>JiBX/WS specific configuration can be used for applications deployed as HTTP Servlets or in the TCP Server.</p> 
+    
+<h4><a name="http">HTTP Servlet Usage</a></h4>
+<p>For HTTP, the JiBX/WS implementation uses a simple Java servlet for the server implementation of web services.
+This servlet can be bundled as part of an existing web application, or as a standalone application. Web applications 
+that include JiBX/WS may be deployed to any ordinary servlet engine (such as Apache Tomcat, or Jetty), as well as to any
+J2EE application server.
+
+<p>There are two aspects to defining JiBX/WS services running over HTTP. The basic JiBX/WS 
+<a href="%servlet%">servlet configuration</a>
+lists the services to be included within a web application, while the <a href="%define%">service definition</a> for each
+service provides the details of the ports and operations involved in that service.</p>
+
+<p>The <a href="%buildapp%#dependencies">runtime dependencies</a> must be included in the 
+<i>WEB-INF/lib</i> directory of the web application, and any classes used by the actual web service(s) must also be present in the
+same web application. These will either be in a <i>jar</i> file within the <i>WEB-INF/lib</i> directory or as individual
+ <i>class</i> files under the <i>WEB-INF/classes</i> directory. </p>
+
+
+<h4><a name="tcp">TCP Server Usage</a></h4>
+<p>For TCP, JiBX/WS provides a TcpServer class.</p>
+
+<p>Each service running on the TcpServer must run on a separate port and be specified as a command-line argument.
+Each command-line argument is of the format <i>def-path</i>=<i>port#</i>, where <i>def-path</i> is the path to the <a
+  href="%define%">service definition</a> file and <i>port#</i> is the corresponding service port number.</p>
+
+<p>In addition to the <a href="%buildapp%#dependencies">runtime dependencies</a>, the actual service implementation 
+classes must also be present on the classpath.</p>
+
+</div>
+</div>
+</div>
+
+</body>
+</html>

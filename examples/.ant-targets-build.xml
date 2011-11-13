@@ -1,0 +1,7 @@
+build
+clean
+clean-tomcat
+deploy-tomcat
+hello
+javadoc
+run

@@ -1,0 +1,5 @@
+<service name="jibxws.example.hello">
+  <service-class>org.jibx.ws.example.fault.trace.server.HelloServer</service-class>
+  <operation method="welcomeService"/>
+  <fault include-stack-trace="true"/>
+</service>

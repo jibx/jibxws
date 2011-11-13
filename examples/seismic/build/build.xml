@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+
+<!--
+Ant build file for JiBX/WS seismic example.
+
+This build file "extends" the build file at ../../common.xml.  Run "ant -p" to view the full list of available targets.
+
+In order to run the tcp client code, you will first need to start a TCP server using the start-tcp target. 
+
+This build.xml file has been tested with ant version 1.6.5. 
+-->
+<project name="JiBX/WS Seismic Example" default="build">
+  <property name="jibxws.examples.dir" value="../.." />
+  <property name="client.classname" value="com.sosnoski.seismic.client.BindClient" />
+  <property name="server.file.includes" value="fulldata.txt,regions.txt,**/SeismicService.wsdl" />
+  <property name="warname" value="jibx-ws-seismic" />
+
+  <fileset id="binding.fileset" file="src/com/sosnoski/seismic/common/quake-mapping.xml" />
+
+  <!-- Run the test client using SOAP over basic HTTP text -->
+  <target name="run" description="Runs client using SOAP/HTTP/text" depends="-init">
+    <java classname="com.sosnoski.seismic.client.BindClient" classpathref="client-classpath" fork="true">
+      <arg value=".3" />
+      <arg value="5" />
+      <arg value="-q" />
+      <!--  Modify http.target.host or port in common.xml to use a different host or port -->
+      <arg value="-t=${target.protocol}://${target.host}:${target.port}" />
+      <!-- Spring/WS -->
+      <!--arg value="-p=/spring-ws-seismic/soap/quakeEndpoint"/-->
+      <!-- Axis ADB -->
+      <!--arg value="-p=/axis2/services/SeismicAdb"/-->
+    </java>
+  </target>
+
+  <!-- Run the test client using POX over basic HTTP text -->
+  <target name="run-pox" description="Runs client using POX/HTTP/text" depends="-init">
+    <java classname="com.sosnoski.seismic.client.BindClient" classpathref="client-classpath" fork="true">
+      <arg value=".3" />
+      <arg value="5" />
+      <arg value="-q" />
+      <arg value="-p=/jibx-ws-seismic/pox/quake-service" />
+      <arg value="-z=POX" />
+      <!--  Modify http.target.host or port in common.xml to use a different host or port -->
+      <arg value="-t=${target.protocol}://${target.host}:${target.port}" />
+    </java>
+  </target>
+
+  <!-- Run the test client using SOAP over HTTP with XBIS -->
+  <target name="run-xbis" description="Runs client using SOAP/HTTP/XBIS encoding" depends="-init">
+    <java classname="com.sosnoski.seismic.client.BindClient" classpathref="client-classpath" fork="true">
+      <arg value=".3" />
+      <arg value="5" />
+      <arg value="-s=x-xbis" />
+      <arg value="-r=x-xbis,xml" />
+      <arg value="-q" />
+      <!--  Modify http.target.host or port in common.xml to use a different host or port -->
+      <arg value="-t=${target.protocol}://${target.host}:${target.port}" />
+    </java>
+  </target>
+
+  <!-- Run the test client using POX over HTTP with XBIS -->
+  <target name="run-pox-xbis" description="Runs client using POX/HTTP/XBIS encoding" depends="-init">
+    <java classname="com.sosnoski.seismic.client.BindClient" classpathref="client-classpath" fork="true">
+      <arg value=".3" />
+      <arg value="5" />
+      <arg value="-s=x-xbis" />
+      <arg value="-r=x-xbis,xml" />
+      <arg value="-p=/jibx-ws-seismic/pox/quake-service" />
+      <arg value="-z=POX" />
+      <arg value="-q" />
+      <!--  Modify http.target.host or port in common.xml to use a different host or port -->
+      <arg value="-t=${target.protocol}://${target.host}:${target.port}" />
+    </java>
+  </target>
+
+  <!-- Run the TCP server -->
+  <target name="start-tcp"
+          description="Starts the TCP server.  This is required before running any of the run-tcp* targets">
+    <!-- TCP server classpath -->
+    <path id="tcp-server-classpath">
+      <pathelement location="${server.dest.dir}" />
+      <pathelement location="${jibxws.dist.dir}/jibx-ws.jar" />
+      <pathelement location="${jibxws.lib.dir}/jibx-run.jar" />
+      <pathelement location="${jibxws.lib.dir}/xpp3.jar" />
+      <!-- xbis-jibx.jar only required if using the XBIS encoding format -->
+      <pathelement location="${jibxws.lib.dir}/xbis-jibx.jar" />
+      <pathelement location="${jibxws.lib.dir}/commons-logging.jar" />
+      <pathelement location="${jibxws.lib.dir}/log4j.jar" />
+    </path>
+    <java classname="org.jibx.ws.tcp.server.TcpServer" classpathref="tcp-server-classpath" fork="true">
+      <jvmarg value="-Xms128M" />
+      <jvmarg value="-Xmx128M" />
+      <arg value="${basedir}/WEB-INF/quake-service.xml=8123" />
+      <arg value="${basedir}/WEB-INF/quake-service-pox.xml=8124" />
+    </java>
+  </target>
+
+  <!-- Run the test client using SOAP over TCP text -->
+  <target name="run-tcp" description="Runs client using SOAP/TCP/text" depends="-init">
+    <java classname="com.sosnoski.seismic.client.BindClient" classpathref="client-classpath" fork="true">
+      <arg value=".3" />
+      <arg value="5" />
+      <arg value="-t=tcp://localhost:8123" />
+      <arg value="-q" />
+      <!--arg value="-t=tcp://192.168.0.2:8123"/-->
+    </java>
+  </target>
+
+  <!-- Run the test client using POX over TCP text -->
+  <target name="run-pox-tcp" description="Runs client using POX/TCP/text" depends="-init">
+    <java classname="com.sosnoski.seismic.client.BindClient" classpathref="client-classpath" fork="true">
+      <arg value=".3" />
+      <arg value="5" />
+      <arg value="-t=tcp://localhost:8124" />
+      <arg value="-z=POX" />
+      <arg value="-q" />
+      <!--arg value="-t=tcp://192.168.0.2:8124"/-->
+    </java>
+  </target>
+
+  <!-- Run the test client using SOAP over TCP XBIS -->
+  <target name="run-tcp-xbis" description="Runs client using SOAP/TCP/XBIS encoding" depends="-init">
+    <java classname="com.sosnoski.seismic.client.BindClient" classpathref="client-classpath" fork="true">
+      <arg value=".3" />
+      <arg value="5" />
+      <arg value="-s=x-xbis" />
+      <arg value="-r=x-xbis,xml" />
+      <arg value="-t=tcp://localhost:8123" />
+      <arg value="-q" />
+      <!--arg value="-t=tcp://192.168.0.2:8123"/-->
+    </java>
+  </target>
+
+  <!-- Run the test client using POX over TCP XBIS -->
+  <target name="run-pox-tcp-xbis" description="Runs client using POX/TCP/XBIS encoding" depends="-init">
+    <java classname="com.sosnoski.seismic.client.BindClient" classpathref="client-classpath" fork="true">
+      <arg value=".3" />
+      <arg value="5" />
+      <arg value="-s=x-xbis" />
+      <arg value="-r=x-xbis,xml" />
+      <arg value="-t=tcp://localhost:8124" />
+      <arg value="-z=POX" />
+      <arg value="-q" />
+      <!--arg value="-t=tcp://192.168.0.2:8124"/-->
+    </java>
+  </target>
+
+  <target name="test-http" description="Run full set of HTTP tests" depends="run,run-pox,run-xbis,run-pox-xbis" />
+  <target name="test-tcp"
+          description="Run full set of TCP tests"
+          depends="run-tcp,run-pox-tcp,run-tcp-xbis,run-pox-tcp-xbis" />
+
+  <import file="${jibxws.examples.dir}/common.xml" />
+</project>

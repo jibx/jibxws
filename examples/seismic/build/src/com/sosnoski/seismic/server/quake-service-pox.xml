@@ -1,0 +1,4 @@
+<service name="quake" protocol="POX">
+  <service-class>com.sosnoski.seismic.server.QuakeBase</service-class>
+  <operation method="process"/>
+</service>

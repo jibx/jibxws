@@ -1,0 +1,15 @@
+<!--
+Ant build file for JiBX/WS SOAP custom service exception handler example.
+
+This build file "extends" the build file at ../../common.xml.  Run "ant -p" to view the full list of available targets.
+
+This build.xml file has been tested with ant version 1.6.5. 
+-->
+<project name="JiBX/WS service custom exception handler example" default="build">
+  <property name="jibxws.examples.dir" value="../.."/>
+  <property name="client.classname" value="org.jibx.ws.example.custom.exception.client.HelloClient"/>
+  <property name="warname" value="jibx-ws-custom-exception"/>
+  <fileset id="binding.fileset" file="src/org/jibx/ws/example/custom/exception/common/example-binding.xml"/>
+  
+  <import file="${jibxws.examples.dir}/common.xml" />
+</project>

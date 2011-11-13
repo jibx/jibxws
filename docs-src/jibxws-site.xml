@@ -1,0 +1,29 @@
+<menu label="JiBX/WS" source-dir=".">
+  <item label="Overview" file="jibxws.htm" target="index.html">
+    <item label="License" id="license" file="license.htm" target="license.html"/>
+    <item label="Status" id="status" file="status.htm"/>
+  </item>
+  <item label="Getting Started" id="start" file="start.htm" target="start.html"/>
+  <item label="Building your application" id="buildapp" file="build-app.htm" />
+  <item label="Server" id="server" file="server.htm">
+    <item label="Configuring with JiBX/WS" id="config" file="server-config.htm">
+      <item label="HTTP Servlet Configuration" id="servlet" file="servlet-config.htm"/>
+      <item label="Service Definition" id="define" file="service-def.htm"/>
+    </item>
+    <item label="Configuring with Spring" id="spring" file="spring.htm"/>
+  </item>
+  <item label="Client" id="client" file="client.htm"/>
+  <item label="SOAP" id="soap" file="soap.htm"/>
+  <item label="POX" id="pox" file="pox.htm"/>
+  <item label="Examples" id="example" file="example.htm"/>
+  <item label="Build" id="build" file="build-fw.htm"/>
+  <item label="Developer" id="developer" file="developer.htm">
+    <item label="Design" id="design" file="design.htm"/>
+  </item>
+
+  <item label=""/>   <!-- menu spacer -->
+  <item label="JavaDocs" target="api/index.html"/>
+  <link id="api" target="api"/>
+  <link id="springapi" target="http://static.springframework.org/spring/docs/2.5.x/api" />
+  <link id="jibx" target="http://jibx.sourceforge.net"/>
+</menu>

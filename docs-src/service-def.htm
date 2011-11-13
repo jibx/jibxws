@@ -1,0 +1,562 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JiBX/WS: Service Definition</title>
+</head>
+<body class="composite">
+
+<h1>Service Definition</h1>
+
+
+<div id="bodycol">
+<div class="app">
+<div class="h3">
+
+<h3><a name="elements">JiBX/WS Service Definition</a></h3>
+
+<p>The service definition contains details of the methods that are to be exposed as web service operations, and provides 
+customization options for aspects such as the formatting of the XML, adding header handlers, adding custom fault
+handlers etc.</p>
+
+<p>Unless you're configuring your service using <a href="%spring%">Spring</a>, the service definition must be supplied 
+as an XML file.  This file
+is referenced in the <a href="%servlet%"><i>web.xml</i></a> file for a WsServlet,
+ or as a <a href="%config%#tcp">command line argument</a> to the TcpServer. Usually
+this service definition is very simple, as in the following example:</p>
+
+<p></p>
+
+<div id="source"><pre>&lt;service name="quake">
+  &lt;service-class>com.sosnoski.seismic.server.QuakeBase&lt;/service-class>
+  &lt;operation method="process"/>
+&lt;/service>
+</pre></div>
+<!-- removed   
+  &lt;wsdl-uri>http://seismic.sosnoski.com/wsdl&lt;/wsdl-uri> 
+  &lt;schema>SeismicSchema.xsd&lt;/schema>
+-->
+
+<p>This defines a service named <b>quake</b> linked to the class <code>com.sosnoski.seismic.server.QuakeBase</code>.
+A single operation is defined as linked to the method <code>process()</code> within that class <!-- , with the operation name
+by default the same as the method name-->. By default, it is assumed that a single JiBX binding definition contains
+the JiBX bindings for the method parameter and return values.  JiBX/WS will automatically detect and use those bindings.
+When the service is invoked, the body of the input message is unmarshalled. The type of the unmarshalled object is used to
+determine the operation requested, by matching the object type to the parameter types of the defined operations (so if 
+multiple operations are defined, each must take a different type of parameter). When an operation is invoked, the object 
+returned by the corresponding method call is marshalled as the body of the output message.</p>
+
+<!-- <p>The above service definition also includes optional components used in generating the WSDL service description,
+consisting in this case of the schema definition for the XML data to be exchanged and the namespace URI for the WSDL
+definitions.</p> -->
+
+<p>A number of other optional components can be used. The full list of elements used in the
+service definition is supplied below, along with the list of possible child elements for each and linked details for the
+elements with complex content. Most child elements are optional and only used when necessary to change default behavior;
+all are ordered.</p>
+
+<h4>Elements</h4>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+	<tr class="b">
+		<td><a href="#service"><b>service</b></a></td>
+		<td>
+		<p>The root element of the service definition. See <a href="#service">&lt;service></a> for the list of attributes
+		and other additional information.</p>
+		<p>Children: <!--[<b>schema</b>],  [<b>wsdl-uri</b>], --> <b>service-class</b>, <b>operation</b>+, 
+		<b>[jibx-binding]</b>, <b>[jibx-in-binding]</b>, <b>[jibx-out-binding]</b>, [<b>handler-class</b>]*, 
+		[<b>output-completion-listener-class</b>], [<b>service-exception-handler-class</b>], 
+		[<b>fault</b>], [<b>http-servlet-options</b>] elements, and attributes.
+		<br>
+		(one <b>service-class</b> child, one or more <b>operation</b> children, zero or one <b>jibx-binding</b> child,
+		zero or one <b>jibx-in-binding</b> child, zero or one <b>jibx-out-binding</b> child, 
+		zero or more <b>handler-class</b> children, 
+		zero or one <b>output-completion-listener-class</b> child, zero or one <b>service-exception-handler-class</b> child,
+		zero or one <b>fault</b> child, zero or one <b>http-servlet-options</b> child)</p>
+		</td>
+	</tr>
+<!-- 	
+	<tr class="a">
+		<td><b>schema</b></td>
+		<td>
+		<p>Optional path to schema definition for XML data exchanged by service. This may be either a path relative to the
+		web application WEB-INF directory, an absolute path on the file system, or an absolute URL. If not supplied, WSDL will
+		not be generated for the service.</p>
+		<p>Children: none (text content only)</p>
+		</td>
+	</tr>
+	<tr class="b">
+		<td><b>wsdl-uri</b></td>
+		<td>
+		<p>Namespace URI for WSDL definitions. This is required if WSDL generation is to be supported, but is optional and
+		unused otherwise.</p>
+		<p>Children: none (text content only)</p>
+		</td>
+	</tr>
+-->	
+	<tr class="a">
+		<td><a name="service-class"><b>service-class</b></a></td>
+		<td>
+		<p>Required fully qualified name of class used to process requests for this service. All operations defined for
+		the service must be implemented by methods of this class.</p>
+		<p>Children: none (text content only)</p>
+		</td>
+	</tr>
+  <tr class="b">
+    <td><a href="#operation"><b>operation</b></a></td>
+    <td>
+    <p>Definition of an operation supported by this service. See <a href="#operation">&lt;operation></a> for the list
+    of attributes and other additional information.</p>
+    </p>
+    <p>Children: [<b>input-class</b>], [<b>output-class</b>]</p>
+    </td>
+  </tr>
+  <tr class="a">
+    <td><a name="input-class"><b>input-class</b></a></td>
+    <td>
+    <p>Optional class of parameter associated with an operation method. Normally this is obtained by reflection
+    directly from the method information. It can be overridden using this child element to set a more-specific type than
+    that used in the method signature (a particular class that's expected to be used for a <code>java.lang.Object</code>
+    parameter, for instance).</p>
+    <p>Children: none (text content only)</p>
+    </td>
+  </tr>
+  <tr class="b">
+    <td><a name="output-class"><b>output-class</b></a></td>
+    <td>
+    <p>Optional class of result associated with an operation method. Normally this is obtained by reflection directly
+    from the method information. It can be overridden using this child element to set a more-specific type than that used
+    in the method signature (a particular class that's expected to be returned for a <code>java.lang.Object</code> result,
+    for instance).</p>
+    <p>Children: none (text content only)</p>
+    </td>
+  </tr>
+  <tr class="a">
+    <td><a name="jibx-binding"><b>jibx-binding</b></a></td>
+    <td>
+    <p>Optional element to set the JiBX binding factory to be used for the input and output messages. This is not
+    normally required, since JiBX/WS will automatically discover the JiBX binding factory based on the Java class of 
+    either the input parameter or return type of the operations.  Use this element if you have multiple bindings for 
+    these classes, and/or
+    need to set a specific binding. Setting <b>jibx-binding</b> is equivalent to setting both the <b>jibx-in-binding</b>
+    and <b>jibx-out-binding</b> elements to the same value.</p>
+    <p>Children: none (attributes only)</p>
+    </td>
+  </tr>
+  <tr class="b">
+    <td><a name="jibx-in-binding"><b>jibx-in-binding</b></a></td>
+    <td>
+    <p>Optional element to set the JiBX binding factory to be used for the input message. This is not
+    normally required, since JiBX/WS will automatically deduce the JiBX binding factory based on the Java class of 
+    either the input parameter or return type of the operations.  Use this element if you have need to set a specific
+    binding for the input message. See also <b>jibx-binding</b> and <b>jibx-out-binding</b>.</p>
+    <p>Children: none (attributes only)</p>
+    </td>
+  </tr>
+  <tr class="a">
+    <td><a name="jibx-out-binding"><b>jibx-out-binding</b></a></td>
+    <td>
+    <p>Optional element to set the JiBX binding factory to be used for the output message. This is not
+    normally required, since JiBX/WS will automatically deduce the JiBX binding factory based on the Java class of 
+    either the input parameter or return type of the operations.  Use this element if you have need to set a specific
+    binding for the output message. See also <b>jibx-binding</b> and <b>jibx-in-binding</b>.</p>
+    <p>Children: none (attributes only)</p>
+    </td>
+  </tr>
+	<tr class="b">
+		<td><a href="#handler-class"><b>handler-class</b></a></td>
+		<td>
+		<p>Optional <a href="#handler-class">handler class</a> definition for adding handlers to a service, for example
+		SOAP header handlers.</p>
+		<p>Children: [<b>constructor-arg</b>]*</p>
+		</td>
+	</tr>
+	<tr class="a">
+		<td><a href="#handler-constructor-arg"><b>constructor-arg</b></a></td>
+		<td>
+		<p>Optional <a href="#handler-constructor-arg">constructor arguments</a> to <a href="#handler-class">handler class</a>
+		definition.</p>
+		<p>Children: none (attributes only)</p>
+		</td>
+	</tr>
+  <tr class="b">
+    <td><a name="output-completion-listener-class"><b>output-completion-listener-class</b></td>
+    <td>
+    <p>Optional class to be called after JiBX/WS has completed sending the output message. 
+    The class must implement <code>org.jibx.ws.transport.OutputCompletionListener</code>.  See 
+    <a href=%example%#interceptor>interceptor example</a>.
+    <p>Children: none (text content only)</p>
+    </td>
+  </tr>
+  <tr class="a">
+    <td><a name="service-exception-handler-class"><b>service-exception-handler-class</b></a></td>
+    <td>
+    <p>Optional class that overrides the default behavior when the service class throws an exception, or an error
+occurs in the handling of the message.  For the SOAP protocol, the default behavior is to
+ <a href="%soap%#fault">return a SOAP fault</a>. For POX, the default behavior is to <a href="%pox%#exception">throw a runtime exception</a>.</p>
+ <p>The class must extend <code>org.jibx.ws.server.ServiceExceptionHandler</code>.  See <a href="%example%#custom-exception-handler">custom exception handling example</a>.</p>
+    <p>Children: none (text content only)</p>
+    </td>
+  </tr>
+	<tr class="b">
+		<td><a href="#fault"><b>fault</b></a></td>
+		<td>
+		<p>Optional settings for protocol specific fault handling. See <a href="#fault">&lt;fault></a> for the list of
+		attributes and other additional information.</p>
+		<p>Children: none (attributes only)</p>
+		</td>
+	</tr>
+  <tr class="a">
+    <td><a href="#wsdl"><b>wsdl</b></a></td>
+    <td>
+    <p>Optional settings for exposing WSDL. See <a href="#wsdl">&lt;wsdl></a> for the list of
+    attributes and other additional information.</p>
+    <p>Children: none (attributes only)</p>
+    </td>
+  </tr>
+  <tr class="b">
+    <td><a href="#http-servlet-options"><b>http-servlet-options</b></a></td>
+    <td>
+    <p>Optional definition of HTTP Servlet specific options.</p>
+    <p>Children: [<b>input-stream-interceptor</b>], [<b>output-stream-interceptor</b>] <br>
+    (an optional <b>input-stream-interceptor</b> child, and an optional <b>output-stream-interceptor</b> child).</p>
+    </td>
+  </tr>
+  <tr class="a">
+    <td><a href="#stream-interceptor"><b>input-stream-interceptor</b></a></td>
+    <td>
+    <p>Optional <a href="#stream-interceptor">stream interceptor</a> definition for intercepting the input stream
+    of the HTTP servlet request. See 
+    <a href=%example%#interceptor>interceptor example</a>.</p>
+    <p>Children: [<b>constructor-arg</b>]*<br>
+    (zero or more <b>constructor-arg</b> children).</p>
+    </td>
+  </tr>
+  <tr class="b">
+    <td><a href="#stream-interceptor"><b>output-stream-interceptor</b></a></td>
+    <td>
+    <p>Optional <a href="#stream-interceptor">stream interceptor</a> definition for intercepting the output stream
+    of the HTTP servlet response. See 
+    <a href=%example%#interceptor>interceptor example</a>.</p>
+    <p>Children: [<b>constructor-arg</b>]*<br>
+    (zero or more <b>constructor-arg</b> children).</p>
+    </td>
+  </tr>
+  <tr class="a">
+    <td><a href="#interceptor-constructor-arg"><b>constructor-arg</b></a></td>
+    <td>
+    <p>Optional <a href="#interceptor-constructor-arg">constructor arguments</a> to <a href="#stream-interceptor">stream-interceptor</a>
+    definition (either input-stream-interceptor or output-stream-interceptor).</p>
+    <p>Children: none (attributes only)</p>
+    </td>
+  </tr>
+</table>
+
+</div>
+<div class="h4">
+<h4><a name="service">&lt;service></a></h4>
+
+<p>The <b>service</b> element is the root element of the service definition document. The core of the service
+definition is the list of operations supported by the service, which are defined by <a href="#operation"><b>operation</b></a>
+child elements.</p>
+
+<!-- <p>Each service definition may optionally include the necessary information to support WSDL generation, which
+requires at least a schema definition for the elements used as request and response bodies (supplied as a path in the <b>schema</b>
+child element) and a WSDL namespace URI (in the <b>wsdl-uri</b> child element). If either of these child elements is
+missing, WSDL generation will not be supported for the service and requests for the WSDL will return a <i>404 Not
+Found</i> response.</p>
+
+<p>Three names are associated with the WSDL definition of a service: The service name, the binding name, and the
+port name. By default these are all generated, based either on a supplied base name (from the <b>base-name</b>
+attribute) or on the file name of the supplied schema definition (that is, what's left after stripping off leading
+directory paths and trailing extensions), but they may be overridden by using attributes of the <b>service</b> element.
+The WSDL generation also requires a namespace URI; this defaults to the access path of the service, but can also be
+overridden by using an attribute.</p> -->
+
+<h4>Attributes</h4>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+<!-- 
+	<tr class="b">
+		<td><b>name</b></td>
+		<td>
+		<p>Base name used to derive other names for this service. If supplied, this replaces the schema file name as the
+		base for generating other names used in the WSDL for the service.</p>
+		</td>
+	</tr>
+	<tr class="a">
+		<td><b>service-name</b></td>
+		<td>
+		<p>Optional name to be used for this service in generated WSDL. If not supplied, a name is generated by appending
+		"Service" to the base name.</p>
+		</td>
+	</tr>
+	<tr class="b">
+		<td><b>binding-name</b></td>
+		<td>
+		<p>Optional name to be used for the service binding in generated WSDL. If not supplied, a name is generated by
+		appending "Binding" to the base name.</p>
+		</td>
+	</tr>
+	<tr class="a">
+		<td><b>port-type-name</b></td>
+		<td>
+		<p>Optional name to be used for the service port type in generated WSDL. If not supplied, a name is generated by
+		appending "Interface" to the base name.</p>
+		</td>
+	</tr>
+	<tr class="b">
+		<td><b>port-name</b></td>
+		<td>
+		<p>Optional name to be used for the service port in generated WSDL. If not supplied, the base name is used as the
+		port name.</p>
+		</td>
+	</tr>
+-->	
+	<tr class="a">
+		<td><a name="indent"><b>indent</b></a></td>
+		<td>
+		<p>Optional number of spaces to use in indenting output XML. The default is to suppress all indentation and generate XML
+		with no added spaces or line breaks.</p>
+		</td>
+	</tr>
+	<tr class="b">
+		<td><a name="protocol"><b>protocol</b></a></td>
+		<td>
+		<p>Optionally specifies the protocol for the service to use. Protocols currently supported are 
+		<b><a href="%pox%">POX</a></b> and <b><a href="%soap%">SOAP</a>1.1</b>. Defaults to <b>SOAP1.1.</b></p>
+		</td>
+	</tr>
+</table>
+
+</div>
+<div class="h4">
+<h4><a name="operation">&lt;operation></a></h4>
+
+<p>The <b>operation</b> element defines a single operation for a service. Each operation uses an associated method
+within the <b>service-class</b> specified by the <a href="#service"><b>service</b></a> element. Each operation method
+must take a single input parameter and return a result object.</p>
+
+<p>With the doc/lit style of web services supported by JiBX/WS the input message element name always determines the
+particular operation to be performed. JiBX/WS actually finds the input message element name corresponding to each
+operation by doing a reverse lookup within the class mappings given in the JiBX binding definition. The binding 
+definition can only associate one type of object with an element, so there's a fixed linkage between the element name
+and the object type. This means that the type of the input parameter used for each operation method within a service
+must be unique.</p>
+
+<!-- <p>Most of the operation information is generated by default, with only the method name required.</p> -->
+
+<h4>Attributes</h4>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+	<tr class="b">
+		<td><b>method</b></td>
+		<td>
+		<p>Method name for this operation. This must be a public method within the <b>service-class</b>
+		specified by the <b>service</b> element.</p>
+		</td>
+	</tr>
+<!-- 
+	<tr class="a">
+		<td><b>soap-action</b></td>
+		<td>
+		<p>Optional SOAPAction HTTP header value
+		for this operation. If a SOAPAction header is present on a request it must match the operation associated with the
+		message body or an error is returned. By default, SOAPAction values are left empty and are not included in generated
+		WSDL, since they effectively add no useful information for doc/lit services.</p>
+		</td>
+	</tr>
+	<tr class="b">
+		<td><b>operation-name</b></td>
+		<td>
+		<p>Optional name for this operation used in generated WSDL. By default, the operation name is the same as the
+		method name.</p>
+		</td>
+	</tr>
+-->	
+</table>
+</div>
+
+<div class="h4">
+<h4><a name="jibx-binding">&lt;jibx-binding></a></h4>
+<p>This element structure is used for the <b><a href="#jibx-binding">jibx-binding</a></b>, 
+<b><a href="#jibx-in-binding">jibx-in-binding</a></b> and <b><a href="#jibx-out-binding">jibx-out-binding</a></b> 
+elements.</p>
+<h4>Attributes</h4>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+  <tr class="b">
+    <td><b>binding-name</b></td>
+    <td>
+    <p>Specifies the name of the JiBX binding definition.  See 
+    <a href="http://jibx.sourceforge.net/binding/binding-element.html">JiBX &lt;binding> element reference</a>.</p>
+    </td>
+  </tr>
+  <tr class="a">
+    <td><b>package-name</b></td>
+    <td>
+    <p>Specifies the package of the JiBX binding definition.  See 
+    <a href="http://jibx.sourceforge.net/binding/binding-element.html">JiBX &lt;binding> element reference</a>.</p>
+    </td>
+  </tr>
+</table>
+</div>
+
+<div class="h4">
+<h4><a name="handler-class">&lt;handler-class></a></h4>
+
+<p>
+The <b>handler-class</b> element adds handlers to a service. Each handler
+    class must implement either the <code>org.jibx.ws.io.handler.InHandler</code> 
+    or <code>org.jibx.ws.io.handler.OutHandler</code>
+    interface (dependent on whether it is for input or output messages). An instance of the handler
+    class will be created for each message exchange context and called as part of the input or
+    output handling. Since a separate handler class instance is created for each context these do not need to be
+    threadsafe - only one thread will call any given handler instance at a time. However the handlers do need
+    to be serially reusable. Currently, the only scope in which handlers are valid is for SOAP headers.</p>
+
+<h4>Attributes</h4>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+<!-- <tr class="b">
+		<td><b>id</b></td>
+		<td>
+		<p>Defines a unique id for the handler (not currently used).</p>
+		</td>
+	</tr>
+-->	
+	<tr class="a">
+		<td><b>class</b></td>
+		<td>
+		<p>Specifies the Java class of the handler. This class must implement either the <code>org.jibx.ws.io.handler.InHandler</code>
+		or <code>org.jibx.ws.io.handler.OutHandler</code> interface. The class may optionally be constructed with arguments of type <code>java.lang.String</code>.
+		See the <a href=#handler-constructor-arg>constructor-arg</a> element.</p>
+		</td>
+	</tr>
+</table>
+</div>
+
+<div class="h4">
+<h4><a name="handler-constructor-arg">&lt;constructor-arg></a></h4>
+
+<p>The <b>constructor-arg</b> element defines arguments to be passed to the construction of a <a
+	href="#handler-class">handler-class</a>. The handler-class must have a constructor containing the same number of
+arguments, and these arguments must be of type <code>java.lang.String</code>.</p>
+
+<h4>Attributes</h4>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+	<tr class="b">
+		<td><b>value</b></td>
+		<td>
+		<p>The value of the constructor argument.</p>
+		</td>
+	</tr>
+</table>
+</div>
+
+<div class="h4">
+<h4><a name="fault">&lt;fault></a></h4>
+
+<p>The <b>fault</b> element contains settings for protocol specific fault handling (eg. SOAP fault).</p>
+
+<h4>Attributes</h4>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+	<tr class="b">
+		<td><b>include-stack-trace</b></td>
+		<td>
+		<p>If set to true, a stack trace will be included with the fault details. Optional. Defaults to false.</p>
+		</td>
+	</tr>
+</table>
+
+
+<div class="h4">
+<h4><a name="wsdl">&lt;wsdl></a></h4>
+
+<p>The <b>wsdl</b> element contains settings for configuring the service to returning a WSDL definition. 
+The service's WSDL definition will be returned on HTTP GET requests to the service URL, suffixed with "?wsdl". 
+For an example see the <a href="%example%#seismic">seismic example</a>.</p>
+
+<h4>Attributes</h4>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+  <tr class="a">
+    <td><b>file</b></td>
+    <td>
+    <p>Set to the path of the WSDL file to be returned, for example "/WEB-INF/myService.wsdl"</p>
+    </td>
+  </tr>
+  <tr class="b" id="transformLocation">
+    <td><b>transformLocation</b></td>
+    <td>
+    <p>If set to true, the location of services defined in the WSDL are transformed, based on the request URL.
+    WSDL service locations defined as absolute URLs are modified to match the <i>scheme</i>, <i>server name</i>
+    and <i>server port</i> of the incoming WSDL request.  
+    Service locations that are relative URLs starting with a "/", are prefixed by 
+    <i>scheme</i>://<i>serverName</i>:<i>serverPort</i>, where <i>scheme</i>, <i>serverName</i> and <i>serverPort</i>
+    are obtained from the WSDL request.</p>
+    <p>For example, assuming the WSDL request is <i>http://foo.com/bar?wsdl</i> on port 80:</p>
+    <ul>
+    <li>A WSDL service location of <i>/bar/service</i> would be transformed to <i>http://foo.com:80/bar/service</i></li>
+    <li>A WSDL service location of <i>http://localhost/bar/service2</i> would be transformed to <i>http://foo.com:80/bar/service2</i></li>
+    </ul>
+    <p>Defaults to false.</p>
+    </td>
+  </tr>
+</table>
+
+
+<div class="h4">
+<h4><a name="stream-interceptor">&lt;stream-interceptor></a></h4>
+
+<p>
+The optional <b>input-stream-interceptor</b> and <b>output-stream-interceptor</b> elements add interceptors to allow
+input streams and output streams to be intercepted. These interceptors are only useful in the limited cases where you 
+need access to the raw messages. For most cases, such as logging or validation, the XML stream interceptors are
+preferred.  These will be implemented in a <a href="%status%">future release</a>.
+<p>An instance of the interceptor class will be created for each message exchange context and invoked at the appropriate
+point in the processing of a message. Since a separate interceptor class instance is created for each context these do not need to be
+    threadsafe - only one thread will call any given interceptor instance at a time. However the interceptors do need
+    to be serially reusable. The types of interceptor are:
+    <table cellpadding="3" cellspacing="2" border="1" width="100%">
+    <tr class ="b">
+    <td>org.jibx.ws.transport.interceptor.InputStreamInterceptor</td>
+    <td>Intercepts the InputStream at the transport level.</td>
+    </tr>
+    <tr class ="a">
+    <td>org.jibx.ws.transport.interceptor.OutputStreamInterceptor</td>
+    <td>Intercepts the OutputStream at the transport level.</td>
+    </tr>
+    </table>
+    </p>
+<h4>Attributes</h4>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+  <tr class="a">
+    <td><b>class</b></td>
+    <td>
+    <p>Specifies the Java class of the interceptor. This class must implement either the <code>org.jibx.ws.transport.interceptor.InputStreamInterceptor</code>
+    or <code>org.jibx.ws.transport.interceptor.OutputStreamInterceptor</code> as appropriate. The class may optionally be constructed with arguments of type <code>java.lang.String</code>
+    (see <a href=#interceptor-constructor-arg>constructor-arg</a>).</p>
+    </td>
+  </tr>
+</table>
+</div>
+
+<div class="h4">
+<h4><a name="interceptor-constructor-arg">&lt;constructor-arg></a></h4>
+
+<p>The optional <b>constructor-arg</b> element defines arguments to be passed to the construction of a <a
+  href="#stream-interceptor">stream-interceptor</a>. The stream-interceptor must have a constructor containing the same number of
+arguments, and these arguments must be of type <code>java.lang.String</code>.</p>
+
+<h4>Attributes</h4>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+  <tr class="b">
+    <td><b>value</b></td>
+    <td>
+    <p>The value of the constructor argument.</p>
+    </td>
+  </tr>
+</table>
+</div>
+
+</div>
+</div>
+</div>
+
+</body>
+</html>

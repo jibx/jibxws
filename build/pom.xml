@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.jibx.ws.config</groupId>
+    <artifactId>jibxws-reactor</artifactId>
+    <version>0.9.2-SNAPSHOT</version>
+  </parent>
+
+  <groupId>org.jibx</groupId>
+  <artifactId>jibx-ws</artifactId>
+  <packaging>bundle</packaging>
+
+  <name>jibx-ws</name>
+  <description>JiBX jibx-ws code</description>
+
+  <profiles>
+    <profile> 
+      <id>sonatype-oss-release</id>
+      <build>
+      <!-- ***CAREFUL*** This logic moves the source code to the current project, then
+      does NOT compile it. This way, the api and source are in the repo. -->
+        <plugins>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.4.3</version>
+            <executions>
+          <execution>
+            <id>copy-jibxws</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/src/main/java</outputDirectory>
+              <resources>          
+                <resource>
+                  <directory>src</directory>
+                  <filtering>false</filtering>
+                  <includes>
+                    <include>org/jibx/ws/**/*.java</include>
+                  </includes>
+                </resource>
+              </resources>              
+            </configuration>            
+          </execution>
+            </executions>
+          </plugin>
+
+	      <plugin>
+	        <inherited>true</inherited>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-compiler-plugin</artifactId>
+	        <configuration>
+	          <excludes>
+	            <exclude>**/**</exclude>	<!-- This will not compile any, but will include the source in the dist -->
+	          </excludes>
+	        </configuration>
+	      </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <Export-Package>
+                org.jibx.ws.*;version=${project.version},
+            </Export-Package>
+        <Include-Resource>@../lib/jibx-ws.jar;inline=**</Include-Resource>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.jibx</groupId>
+      <artifactId>jibx-run</artifactId>
+      <version>1.2.4-SNAPSHOT</version>
+    </dependency>
+    <dependency> 
+      <groupId>org.jibx</groupId> 
+      <artifactId>jibx-extras</artifactId> 
+      <version>1.2.4-SNAPSHOT</version> 
+      <scope>compile</scope> 
+    </dependency> 
+    <dependency> 
+      <groupId>org.jibx</groupId> 
+      <artifactId>xbis-jibx</artifactId> 
+      <version>1.2.4-SNAPSHOT</version> 
+      <scope>compile</scope> 
+    </dependency>
+    
+    <dependency> 
+      <groupId>commons-logging</groupId> 
+      <artifactId>commons-logging</artifactId> 
+      <scope>compile</scope> 
+    </dependency>
+    <dependency> 
+      <groupId>javax.servlet</groupId> 
+      <artifactId>servlet-api</artifactId> 
+      <scope>provided</scope> 
+    </dependency> 
+    <dependency> 
+      <groupId>log4j</groupId> 
+      <artifactId>log4j</artifactId> 
+      <optional>true</optional> 
+    </dependency> 
+    <dependency> 
+      <groupId>junit</groupId> 
+      <artifactId>junit</artifactId> 
+      <scope>test</scope> 
+    </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId> 
+      <artifactId>xmlunit</artifactId> 
+      <scope>test</scope> 
+    </dependency> 
+    <dependency> 
+      <groupId>xpp3</groupId> 
+      <artifactId>xpp3</artifactId> 
+      <optional>true</optional> 
+    </dependency> 
+    <dependency> 
+      <groupId>org.springframework</groupId> 
+      <artifactId>spring-webmvc</artifactId> 
+      <optional>true</optional> 
+    </dependency> 
+    <dependency> 
+      <groupId>org.springframework</groupId> 
+      <artifactId>spring-aop</artifactId> 
+      <optional>true</optional> 
+    </dependency> 
+    <dependency> 
+      <groupId>cglib</groupId> 
+      <artifactId>cglib</artifactId> 
+      <optional>true</optional> 
+    </dependency> 
+</dependencies>
+
+</project>
+

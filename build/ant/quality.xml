@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<project name="jibx-ws-quality" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+  <import file="compile.xml" />
+
+  <target name="reports" depends="compile, -ivy-init">
+
+    <mkdir dir="${reports.dir}" />
+    
+    <ivy:cachepath organisation="checkstyle" module="checkstyle" revision="4.3" inline="true" conf="default"
+    pathid="checkstyle.classpath" transitive="true"/>
+    <taskdef resource="checkstyletask.properties" classpathref="checkstyle.classpath" />  
+    
+    <checkstyle config="${main.src.dir}/jibx_checks.xml">
+      <fileset dir="${main.src.dir}" includes="**/*.java" />
+      <formatter type="xml" toFile="${reports.dir}/checkstyle_errors.xml" />
+    </checkstyle>
+    
+    <taskdef name="findbugs"
+             classname="edu.umd.cs.findbugs.anttask.FindBugsTask"
+             classpath="${env.FINDBUGS_HOME}/lib/findbugs-ant.jar" />
+    <findbugs home="${env.FINDBUGS_HOME}" output="xml" outputFile="${reports.dir}/findbugs.xml">
+      <auxClasspath>
+        <path refid="compile.classpath" />
+      </auxClasspath>
+      <sourcePath path="${main.src.dir}" />
+      <class location="${main.target.dir}" />
+    </findbugs>
+  </target>
+
+</project>

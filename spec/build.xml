@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+
+<!-- ===================================================================
+
+Ant build file for JiBX/WS executable specification.
+
+The build files assume that the required libraries are in the lib folder. If this is not the case, they can be 
+downloaded using the retrieve target. In order to run the retrieve target, you will need to download the Ivy
+jar file from http://repo1.maven.org/maven2/org/apache/ivy/ivy/<version>/ivy-<version>.jar,
+where <version> is the version number and add it to your ant lib folder.
+===================================================================+ -->
+<project name="JiBX/WS Specification"
+         default="test"
+         basedir="."
+         xmlns:ivy="antlib:org.apache.ivy.ant">
+
+  <property name="ivysettings.file" location="../build/ivysettings.xml" />
+  <property name="build.dir" location="${basedir}" />
+  
+  <import file="../build/ant/common.xml"/>
+
+  <property name="ivy.file" location="${build.dir}/ivy.xml" />
+  <property name="lib.dir" location="${basedir}/lib" />
+  <property name="spec.src.dir" location="${basedir}/src/spec" />
+  <property name="test.src.dir" location="${basedir}/src/test" />
+  <property name="target.dir" location="${basedir}/target" />
+  <property name="test.target.dir" location="${target.dir}/test-classes" />
+  <property name="test.results.dir" location="${target.dir}/target/results" />
+  <property name="spec.target.dir" location="${target.dir}/target/spec" />
+
+  <path id="test.classpath">
+    <fileset dir="${lib.dir}" />
+  </path>
+
+  <!-- Delete class files, test results, javadocs and built jars and zips -->
+  <target name="clean" description="Clean all output">
+    <delete dir="${target.dir}" />
+  </target>
+
+  <!-- Compile the specification tests -->
+  <target name="compile-test" depends="retrieve">
+    <mkdir dir="${test.target.dir}" />
+    <javac srcdir="${test.src.dir}" destdir="${test.target.dir}">
+      <classpath refid="test.classpath" />
+    </javac>
+  </target>
+
+  <!-- Run the specification tests. -->
+  <target name="test" depends="clean,compile-test" description="Run the specification tests to create the target specification">
+    <mkdir dir="${test.results.dir}" />
+    <junit fork="true"
+           forkmode="perBatch"
+           printsummary="true"
+           errorProperty="test.failed"
+           failureProperty="test.failed" >
+      <sysproperty key="concordion.output.dir" path="${spec.target.dir}" />
+      <classpath>
+        <pathelement location="${spec.src.dir}" />
+        <path refid="test.classpath" />
+        <path path="${test.target.dir}" />
+      </classpath>
+      <formatter type="brief" usefile="false" />
+      <formatter type="xml" />
+      <batchtest todir="${test.results.dir}" >
+        <fileset dir="${test.src.dir}" includes="**/*Test.java" />
+      </batchtest>
+    </junit>
+    <fail message="Tests failed: check test reports." if="test.failed" />
+  </target>
+
+</project>

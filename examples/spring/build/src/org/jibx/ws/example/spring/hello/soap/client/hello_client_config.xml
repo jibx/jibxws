@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean id="bindingDirectory" class="org.jibx.runtime.BindingDirectory" factory-method="getFactory">
+    <constructor-arg value="org.jibx.ws.example.spring.hello.common.Greetee" />
+  </bean>
+  
+  <bean id="hello-soap-client" class="org.jibx.ws.soap.client.SoapClient">
+    <constructor-arg value="http://localhost:8080/jibx-ws-spring-hello-soap/welcome-service" />
+    <constructor-arg ref="bindingDirectory" />
+    <property name="messageOptions">
+      <bean class="org.jibx.ws.io.MessageOptions">
+        <property name="indentCount" value="4" />
+        <property name="indentChar" value=" " />
+      </bean>
+    </property>
+  </bean>
+
+  <bean id="request-scope-client" class="org.jibx.ws.soap.client.SoapClient">
+    <constructor-arg value="http://localhost:8080/jibx-ws-spring-request-scope/welcome-service" />
+    <constructor-arg ref="bindingDirectory" />
+  </bean>
+
+</beans>

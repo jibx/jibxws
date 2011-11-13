@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JiBX/WS: Building your JiBX/WS application</title>
+</head>
+<body class="composite">
+
+<h1>Building your JiBX/WS application</h1>
+
+<div id="bodycol">
+<div class="app">
+<div class="h3">
+
+<h3><a name="build">Building your JiBX/WS application</a></h3>
+<p>The <a href="%start%#starter">starter</a> application contains Ant, Maven and Gradle build scripts that you can use as a 
+basis for your builds.</p> 
+
+<h4>Running the JiBX binding compiler</h4>
+<p>You will need to ensure that your binding definitions are compiled into your class files with the JiBX binding 
+compiler.  The starter application Ant script includes this in the <i>compile-client</i> and <i>compile-server</i>
+targets. The JiBX documentation contains a number of other options for 
+<a href="%jibx%/bindcomp.html">running the binding compiler</a>, including from the
+command line, or using Maven, or within your IDE.</p>
+
+<h3><a name="dependencies">Runtime Dependencies</a></h3>
+
+<p>
+The core JiBX/WS framework requires <i>jibx-ws.jar</i> file from the JiBX/WS distribution, along with the <i>jibx-run.jar</i> 
+and <i>jibx-extras.jar</i> files from the base JiBX distribution. JiBX/WS uses 
+<a href="http://commons.apache.org/logging/">Commons Logging</a>, so you may also need to
+include <i>commons-logging.jar</i> and possibly <i>log4j.jar</i>, along with associated properties files
+(depending on your application server and logging configuration).
+</p>
+  
+<p>JiBX requires either an XMLPull parser or a StAX parser to be present on the classpath. The <i>xpp3.jar</i> file 
+contains the <a href="http://www.extreme.indiana.edu/soap/xpp/mxp1/">XPP3</a> XMLPull parser.  
+The <i>wstx-asl.jar</i> contains the <a href="http://woodstox.codehaus.org/">Woodstox</a> StAX parser.  The Java SE
+version 6.0 release also contains a StAX implementation as part of 
+<a href="http://java.sun.com/javase/6/docs/technotes/guides/xml/jaxp/index.html">JAXP 1.4</a>. 
+If both XMLPull and StAX parsers are found in the classpath, JiBX/WS obeys the rules defined in the 
+<a href="%jibx%/runtime.html#stax">JiBX runtime documentation.</a>
+</p>   
+<p>To use the XBIS encoding, you will need to include <i>xbis-jibx.jar</i>.</p>
+
+<h3><a name="maven">Maven</a></h3>
+<p>JiBX/WS is available from the main Maven2 repository using</p>
+<pre>
+    &lt;dependency>
+      &lt;groupId>org.jibx&lt;/groupId> 
+      &lt;artifactId>jibx-ws&lt;/artifactId>
+      &lt;version><i>{version}</i>&lt;/version>
+    &lt;/dependency>
+</pre>
+<p>, where <i>{version}</i> is replaced by the JiBX/WS version number.  Note that a number of the transitive dependencies are 
+optional and will be excluded by default.  These optional dependencies include the XML parsers and the Spring Framework 
+dependencies.  To include these dependencies, you will need to explicitly declare them in your POM.</p>
+<p>Maven users should also consider using the <a href="%jibx%/jibx-maven-plugin/">JiBX Maven plugin</a> to run the JiBX
+binding compiler.</p> 
+<p>See the starter project for a sample Maven POM.</p> 
+
+<h3><a name="gradle">Gradle</a></h3>
+<p>See the starter project for a sample Gradle build file.</p> 
+
+<h3><a name="ivy">Ivy</a></h3>
+<p>If you are using Ivy to manage your dependencies, you will need to add the dependency</p>
+<pre>
+    &lt;dependency org="org.jibx" name="jibx-ws" rev="<i>{version}</i>" />
+</pre>
+<p>to your ivy.xml, where <i>{version}</i> is replaced by the JiBX/WS version number. JiBX/WS is available from the main
+Maven2 (ibiblio) repository. As specified in the Maven section above, you may need to explicitly add some optional 
+dependencies to your ivy.xml.</p>
+<p>For Ivy users who want a bit more control over the different configurations, the JiBX/WS distribution contains a
+resolved ivy.xml in the root folder.  If <a href="%build%">building JiBX/WS</a> from source, the Ant 
+<i>publish-ivy-local</i> target will publish to a local Ivy repository.</p>
+</div>
+</div>
+</div>
+
+</body>
+</html>

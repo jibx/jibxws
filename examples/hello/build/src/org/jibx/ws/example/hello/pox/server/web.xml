@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  
+  <servlet>
+    <servlet-name>jibx-ws-hello-pox</servlet-name>
+    <servlet-class>org.jibx.ws.http.servlet.WsServlet</servlet-class>
+    <init-param>
+      <param-name>welcome-service</param-name>
+      <param-value>welcome-service.xml</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>jibx-ws-hello-pox</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+</web-app>

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Using JiBX/WS with Spring</title>
+</head>
+<body class="composite">
+
+<h1>Using JiBX/WS with Spring</h1>
+
+
+<div id="bodycol">
+<div class="app">
+<div class="h3">
+
+<h3>Using JiBX/WS with Spring</h3>
+
+<p>JiBX/WS supports the configuration of web service operations using the <a href="http://www.springframework.org"/>Spring Framework</a>.</p>
+
+<p>The class <a href="%api%/org/jibx/ws/http/servlet/WsSpringServlet.html">WsSpringServlet</a> is an extension of Spring's 
+<a href="%springapi%/org/springframework/web/servlet/FrameworkServlet.html">FrameworkServlet</a> class, customized to work with JiBX/WS. By default, this class loads the application 
+context from an XML file whose name is based on the <code>servlet-name</code> that is defined in the 
+<code>web.xml</code> file. The suffix <code>-servlet.xml</code> is added to the <code>servlet-name</code> name to derive
+the application context file name.</p>
+
+<p>The application context must contain a bean that implements <a href="%api%/org/jibx/ws/http/servlet/ServiceMapper.html">
+ServiceMapper</a>. By default, this bean must be named <code>serviceMapper</code>.  This bean maps the incoming HTTP 
+request to a <code>Service</code> instance that handles the request.  
+<code>Service</code>s are defined using <a href="%api%/org/jibx/ws/server/ServiceDefinition.html">ServiceDefinition</a> 
+beans.  The <code>ServiceDefinition</code> class exposes all of the properties available to <a href="%define%">JiBX/WS 
+Service Definitions</a>, plus additional methods to allow object instances to be assigned for Service, 
+ServiceExceptionHandler and OutputCompletionListener objects. It is necessary to configure 
+<a href="%api%/org/jibx/ws/server/ServiceDefinition.html#init()">init()</a> as an <code>init-method</code> on the 
+ServiceDefinition bean.</p>
+
+<p>For an example, see the <a href="%example%#spring-hello"/>Spring Hello World</a> example. This example includes
+2 services showing the usage of JiBX/WS with both Singleton and Request scope beans.</p>
+
+<p>[<b>Note:</b> It is planned to simplify the Spring configuration in a <a href="%status%">future</a> release using 
+a custom namespace. We also plan to introduce more <code>ServiceMapper</code>s.]</p>
+
+<h4>Dependencies</h4>
+
+<p>In addition to the basic <a href="%buildapp%#dependencies">runtime dependencies</a>, using Spring with JiBX/WS 
+requires <i>spring-webmvc.jar</i>, <i>spring-beans.jar</i>, <i>spring-core.jar</i>, <i>spring-context.jar</i> and <i>spring-web.jar</i>.
+ If using Request scoped beans, you will also need the <i>spring-aop.jar</i> and <i>cglib.jar</i> files.  
+For Maven users, these dependencies are defined as optional in the pom.xml for JiBX/WS.
+For Ivy usage, they are defined using the configurations <i>spring-server</i> and <i>spring-server-aop</i> in the 
+ivy.xml file.</p> 
+
+</div>
+</div>
+</div>
+</body>
+</html>

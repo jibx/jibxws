@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://ws.sosnoski.com/seismic/wsdl"
+   xmlns:wns="http://ws.sosnoski.com/seismic/wsdl"
+   xmlns:tns="http://ws.sosnoski.com/seismic/types"
+   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+   
+ <wsdl:types>
+  <schema xmlns="http://www.w3.org/2001/XMLSchema"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     targetNamespace="http://ws.sosnoski.com/seismic/types"
+     elementFormDefault="qualified">
+   
+   <element name="query">
+    <complexType>
+     <sequence>
+      <element minOccurs="0" name="min-date" type="xsd:dateTime"/>
+      <element minOccurs="0" name="max-date" type="xsd:dateTime"/>
+      <element minOccurs="0" name="min-long" type="xsd:float"/>
+      <element minOccurs="0" name="max-long" type="xsd:float"/>
+      <element minOccurs="0" name="min-lat" type="xsd:float"/>
+      <element minOccurs="0" name="max-lat" type="xsd:float"/>
+      <element minOccurs="0" name="min-mag" type="xsd:float"/>
+      <element minOccurs="0" name="max-mag" type="xsd:float"/>
+      <element minOccurs="0" name="min-depth" type="xsd:float"/>
+      <element minOccurs="0" name="max-depth" type="xsd:float"/>
+     </sequence>
+    </complexType>
+   </element>
+   
+   <complexType name="Region">
+    <simpleContent>
+     <extension base="xsd:string">
+      <attribute name="ident" type="xsd:ID"/>
+      <attribute name="index" type="xsd:int"/>
+     </extension>
+    </simpleContent>
+   </complexType>
+   
+   <complexType name="Quake">
+    <attribute name="time" type="xsd:dateTime"/>
+    <attribute name="millis" type="xsd:int"/>
+    <attribute name="latitude" type="xsd:float"/>
+    <attribute name="longitude" type="xsd:float"/>
+    <attribute name="depth" type="xsd:float"/>
+    <attribute name="magnitude" type="xsd:float"/>
+    <attribute name="method" type="xsd:token"/>
+    <attribute name="region" type="xsd:IDREF"/>
+   </complexType>
+   
+   <complexType name="QuakeSet">
+    <sequence>
+     <element name="area-name" type="xsd:string"/>
+     <element name="regions">
+      <complexType>
+       <sequence>
+        <element maxOccurs="unbounded" minOccurs="0" name="region"
+         type="tns:Region"/>
+       </sequence>
+       <attribute name="count" type="xsd:int"/>
+      </complexType>
+     </element>
+     <element name="quakes">
+      <complexType>
+       <sequence>
+        <element maxOccurs="unbounded" minOccurs="0" name="quake"
+         type="tns:Quake"/>
+       </sequence>
+       <attribute name="count" type="xsd:int"/>
+      </complexType>
+     </element>
+    </sequence>
+   </complexType>
+   
+   <element name="results">
+    <complexType>
+     <sequence>
+      <element maxOccurs="unbounded" minOccurs="0" name="result-set"
+       type="tns:QuakeSet"/>
+     </sequence>
+     <attribute name="count" type="xsd:int"/>
+    </complexType>
+   </element>
+ 
+  </schema>
+ </wsdl:types>
+ 
+ <wsdl:message name="Query">
+  <wsdl:part name="query" element="tns:query"/>
+ </wsdl:message>
+
+ <wsdl:message name="Response">
+  <wsdl:part name="results" element="tns:results"/>
+ </wsdl:message>
+ 
+ <wsdl:portType name="quakeInterface">
+  <wsdl:operation name="process">
+   <wsdl:input message="wns:Query"/>
+   <wsdl:output message="wns:Response"/>
+  </wsdl:operation>
+ </wsdl:portType>
+ 
+ <wsdl:binding name="quakeBinding" type="wns:quakeInterface">
+  <wsdl:operation name="process">
+   <wsdl:input>
+    <soap:body use="literal"/>
+   </wsdl:input>
+   <wsdl:output>
+    <soap:body use="literal"/>
+   </wsdl:output>
+   <soap:operation soapAction=""/>
+  </wsdl:operation>
+  <soap:binding transport="http://schemas.xmlsoap.org/soap/http"
+   style="document"/>
+ </wsdl:binding>
+ 
+ <wsdl:service name="quakeService">
+  <wsdl:port name="quake" binding="wns:quakeBinding">
+   <soap:address location="http://localhost:8080/jibx-ws-seismic/soap/quake-service"/>
+  </wsdl:port>
+ </wsdl:service>
+ 
+</wsdl:definitions>

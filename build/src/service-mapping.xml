@@ -1,0 +1,81 @@
+<binding forwards="false" direction="input">
+  <mapping name="service" post-set="init" class="org.jibx.ws.server.ServiceDefinition">
+
+    <value name="protocol" style="attribute" set-method="setProtocolName" usage="optional" />
+    <value name="indent" set-method="setIndentCount" style="attribute" usage="optional" default="-1" />
+
+    <value name="service-name" field="m_serviceName" style="attribute" usage="optional" />
+    <value name="service-class" field="m_serviceClassName" />
+    <collection field="m_opdefs" type="java.util.ArrayList">
+      <structure name="operation" type="org.jibx.ws.server.OperationDefinition">
+        <value name="method" field="m_methodName" style="attribute" />
+        <value name="input-class" field="m_inputClassName" usage="optional" />
+        <value name="output-class" field="m_outputClassName" usage="optional" />
+
+        <!-- SOAP specific attribute -->
+        <!-- value name="soap-action" field="m_soapAction" style="attribute" usage="optional" /-->
+
+        <!-- WSDL specific attribute -->
+        <!-- value name="operation-name" field="m_operationName" style="attribute" usage="optional" /-->
+      </structure>
+    </collection>
+
+    <structure name="jibx-binding" set-method="setBindingLocator" usage="optional" />
+    <structure name="jibx-in-binding" set-method="setInBodyBindingLocator" usage="optional" />
+    <structure name="jibx-out-binding" set-method="setOutBodyBindingLocator" usage="optional" />
+
+    <collection field="m_hdefs" type="java.util.ArrayList">
+      <structure name="handler-class" type="org.jibx.ws.server.HandlerDefinition">
+        <structure map-as="org.jibx.ws.server.ObjectDefinition" />
+      </structure>
+    </collection>
+
+    <value name="output-completion-listener-class" set-method="setOutputCompletionListenerClassName" usage="optional" />
+    <value name="service-exception-handler-class" set-method="setServiceExceptionHandlerClassName" usage="optional" />
+
+    <!--  SOAP specific elements -->
+    <structure name="fault" usage="optional">
+      <value name="include-stack-trace" field="m_includeStackTraceOnFault" style="attribute" usage="optional" />
+    </structure>
+
+    <!--  WSDL specific elements -->
+    <structure name="wsdl" usage="optional">
+      <value name="file" field="m_wsdlFilepath" style="attribute" />
+      <value name="transformLocation" field="m_wsdlLocationTransform" style="attribute" usage="optional" />
+    </structure>
+
+<!-- 
+    <value name="name" field="m_baseName" style="attribute" usage="optional" />
+    <value name="binding-name" field="m_soapBindingName" style="attribute" usage="optional" />
+    <value name="port-type-name" field="m_portTypeName" style="attribute" usage="optional" />
+    <value name="port-name" field="m_portName" style="attribute" usage="optional" />
+    <value name="schema" field="m_schemaName" usage="optional" />
+    <value name="wsdl-uri" field="m_wsdlNamespace" usage="optional" />
+-->
+    <collection field="m_transportOptDefs" type="java.util.ArrayList">
+      <!-- HTTP servlet specific elements -->
+      <structure name="http-servlet-options" type="org.jibx.ws.http.servlet.HttpServletOptionsDefinition" >
+        <structure name="input-stream-interceptor" field="m_inputStreamInterceptorDef" usage="optional"/>
+        <structure name="output-stream-interceptor" field="m_outputStreamInterceptorDef" usage="optional"/>
+      </structure>
+    </collection>
+  </mapping>
+
+  <mapping class="org.jibx.ws.server.ObjectDefinition" abstract="true">
+    <value name="class" style="attribute" set-method="setClassName" />
+    <collection set-method="setArgs" type="java.lang.String[]" usage="optional">
+      <structure name="constructor-arg">
+        <value name="value" style="attribute" />
+      </structure>
+    </collection>
+  </mapping>
+
+  <mapping class="org.jibx.ws.server.InterceptorDefinition" abstract="true">
+    <structure map-as="org.jibx.ws.server.ObjectDefinition" />
+  </mapping>
+
+  <mapping class="org.jibx.ws.server.BindingLocator" abstract="true">
+    <value name="package-name" field="m_packageName" style="attribute" />
+    <value name="binding-name" field="m_bindingName" style="attribute" />
+  </mapping>
+</binding>

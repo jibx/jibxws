@@ -1,0 +1,83 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JiBX/WS: Developer Guidelines</title>
+</head>
+<body class="composite">
+
+<h1>Developer Guidelines</h1>
+
+<div id="bodycol">
+<div class="app">
+<div class="h3">
+
+<h3>JDK</h3>
+JiBX/WS is built to run on JDK1.3.1 or later.
+
+<h3>Coding Style</h3>
+
+<p>JiBX source code follows "normal" Java coding style, with the following exceptions:</p>
+
+<ul>
+	<li>Static fields, except for static final constants, start with s_</li>
+	<li>Non-static fields start with m_</li>
+	<li>Line length is 120 characters</li>
+	<li>Tabs are replaced with spaces. Java source code is indented by 4 spaces, XML elements are indented by 2
+	spaces.
+</ul>
+
+<h3>Building JiBX/WS</h3>
+<p>JiBX/WS uses Ivy to manage its dependencies. The dependencies are listed in build/ivy.xml. To download the libraries
+run the "ant retrieve" target.  This will download the ivy jar file if necessary, and download all the dependencies to
+the appropriate folders.</p>
+
+<h3>Publishing JiBX/WS</h3>
+<p>Three options for publishing the jibxws-jar file are included in the build file:</p>
+<table>
+<tr><th>Ant target</th><th>Description</th></tr>
+<tr><td>publish-ivy-local</td><td>Publishes to the local Ivy repository on the local machine.  May be useful if you want to test the jar file with other Ivy enabled projects locally.</td></tr>
+<tr><td>publish-maven-snapshot</td><td>Publishes to the <a href="http://jibx.sourceforge.net/maven2-snapshots">JiBX Maven snapshot repository</a>.  Stable builds from the Continuous Integration server should be published here.</td></tr>
+<tr><td>publish-maven-release</td><td>Publishes to the <a href="http://jibx.sourceforge.net/maven2">JiBX Maven repository</a>, which is replicated to the central Maven repository.  Only release builds are to be published here.</td></tr>
+</table>
+<p>The Maven publishing tasks use the Maven Ant plugin, which is automatically downloaded as required.  To publish to the Maven repository, you must have an account
+for the Sourceforge jibx group. It is useful to have an <a href="http://apps.sourceforge.net/trac/sourceforge/wiki/SSH%20keys">SSH key setup</a>, though I'm not
+sure this is necessary.  You will also need to create, or modify, your ~/.m2/settings.xml file to contain the following:</p>
+
+<pre>
+&lt;settings>
+  &lt;servers>
+    &lt;server>
+      &lt;id>sourceforge.net&lt;/id>
+      &lt;username><i>{your_sf_name}</i>,jibx&lt;/username>
+      &lt;password><i>{your_sf_pass}</i>&lt;/password>
+      &lt;filePermissions>775&lt;/filePermissions>
+      &lt;directoryPermissions>775&lt;/directoryPermissions>
+    &lt;/server>
+  &lt;/servers>
+&lt;/settings>
+</pre>
+
+where <i>{your_sf_name}</i> is your Sourceforge username and <i>{your_sf_pass}</i> is your Sourceforge password.  Make sure you secure this file, eg chmod 600.
+
+<h3>Unit Tests</h3>
+<p>To run the unit tests, execute the ant "test" target in build/build.xml. Note that some of the unit tests
+currently fail when using JDK 1.5, due to <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6413803">this
+bug</a>. There is a <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1779701&group_id=23187&atid=377768">
+fix</a> in the latest XmlUnit code, due to be released in XmlUnit 1.2. The options to make these tests run are:</p>
+<ol>
+	<li>Use a JDK other than 1.5.0, or</li>
+	<li>Download and build the latest xmlunit source</li>
+</ol>
+
+<p>If running the tests from within an IDE, ensure that the JiBX binding compiler has been run on the compiled classes. The
+tests do include some static initialization to run the binding compiler - however the classes may already have been
+loaded before this kicks in. If so, the tests should work the 2nd time when invoked from the IDE.</p>
+
+</div>
+</div>
+</div>
+
+</body>
+</html>

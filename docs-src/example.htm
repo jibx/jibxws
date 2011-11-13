@@ -1,0 +1,530 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JiBX/WS: Example Applications</title>
+</head>
+<body class="composite">
+
+<h1>Example Applications</h1>
+
+<div id="bodycol">
+<div class="app">
+<div class="h3">
+
+<p>In addition to the <a href="%start%">starter</a> application, the JiBX/WS distribution includes the following
+examples:</p>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+	<tr class="b">
+		<td><a href="#soap-hello"><b>SOAP Hello World</b></a></td>
+		<td>
+		<p>Demonstrates basic SOAP usage</p>
+		</td>
+	</tr>
+	<tr class="a">
+		<td><a href="#pox-hello"><b>POX Hello World</b></a></td>
+		<td>
+		<p>Demonstrates basic POX usage</p>
+		</td>
+	</tr>
+  <tr class="a">
+    <td><a href="#spring-hello"><b>Spring Hello World</b></a></td>
+    <td>
+    <p>Demonstrates basic Spring configuration of JiBX/WS</p>
+    </td>
+  </tr>
+	<tr class="b">
+		<td><a href="#soap-headers"><b>SOAP Headers</b></a></td>
+		<td>
+		<p>Demonstrates SOAP headers</p>
+		</td>
+	</tr>
+	<tr class="a">
+		<td><a href="#soap-fault-trace"><b>SOAP Fault Trace</b></a></td>
+		<td>
+		<p>Demonstrates SOAP faults including stack trace details</p>
+		</td>
+	</tr>
+	<tr class="b">
+		<td><a href="#soap-fault-custom"><b>SOAP Fault Custom</b></a></td>
+		<td>
+		<p>Demonstrates SOAP faults including custom actor and details elements</p>
+		</td>
+	</tr>
+  <tr class="a">
+    <td><a href="#custom-exception-handler"><b>Custom Exception Handler</b></a></td>
+    <td>
+    <p>Demonstrates the use of a custom exception handler to return an error class instead of a SOAP fault</p>
+    </td>
+  </tr>
+  <tr class="b">
+    <td><a href="#http-servlet-interceptor"><b>HTTP Servlet Interceptor</b></a></td>
+    <td>
+    <p>Demonstrates the use of interceptors to log the raw request and response messages</p>
+    </td>
+  </tr>
+	<tr class="b">
+		<td><a href="#seismic"><b>Seismic</b></a></td>
+		<td>
+		<p>Demonstrates a single application running SOAP or POX, over HTTP or TCP, and using either a text or XBIS
+		encoding. In addition the application demonstrates WSDL publishing. This example allows the payload size to be
+		configured, making it useful for performance benchmarking.</p>
+		</td>
+	</tr>
+</table>
+
+<h3><a name="build-examples">Building and running the examples</a></h3>
+
+<p>The <i>examples</i> folder contains a "super" <i>build.xml</i> file that sequentially invokes the build files of
+all of the examples. For example, invoking "ant build deploy-tomcat run" from the <i>examples</i> folder will build all
+of the examples, then deploy them all, then run them all. The Spring examples will be skipped if the Spring dependencies
+are not in the <i>spring-lib</i> folder.</p>
+
+<p>Each example application has a separate Ant build file (eg. <i>examples/hello/build/soap/build.xml</i>
+under the JiBX/WS root directory). The "build-client" Ant target builds the client side of the application,
+"build-server" the server side (creating a war file in the build folder of the relevant example), and "run" executes the
+actual client application. The default target is "build", which invokes "build-server" followed by "build-client". In
+order to run the client successfully you'll need to have first deployed the application <i>war</i> file to a server. If
+your server is Tomcat, you can use the &quot;deploy-tomcat&quot; target to copy the <i>war</i> file to Tomcat's <i>webapps</i>
+folder, assuming that the <i>CATALINA_HOME</i> environment variable has been set to Tomcat's root folder.</p>
+
+<p>Use the "run" target to run the examples. The examples assume they are running on port 8080. You can change the
+host and/or port for all examples by modifying the <i>http.target.host</i> and <i>http.target.port</i> properties in <i>examples/build.properties</i>.</p>
+
+<p>To reduce duplication the example build files all import the <i>common.xml</i> build file from the <i>examples</i>
+folder. To determine all of the targets available for each example's build file, run "ant -p" against the build file.</p>
+
+<h3><a name="soap-hello">SOAP Hello World Application</a></h3>
+
+<p>This example demonstrates basic SOAP usage. The client sends a request containing the name of a "greetee" and the
+server responds with a welcome greeting to the greetee.</p>
+
+<p>The source for this application is under <code>examples/hello/build/src</code>. The build file is <code>examples/hello/build/soap/build.xml</code>.</p>
+
+<p>The mapping of the <code>Greetee</code> and <code>Welcome</code> Java classes to and from the request and
+response XML is in <code>hello-binding.xml</code>. The <code>HelloClient</code> class looks up this binding in the <code>BindingDirectory</code>
+and constructs a <code>SoapClient</code> using this binding. On invoking <code>Client.call()</code>, the JiBX/WS
+framework then marshals the request object to the body of the SOAP request using the specified binding, makes the SOAP
+request, waits for the SOAP response, unmarshals the SOAP response body to a Java object and returns this object.</p>
+
+<p>On the server side, the <code>web.xml</code> file defines the JiBX/WS servlet and references the <a
+	href="%define%"> service definition</a> file (<code>welcome-service.xml</code>):</p>
+	
+<div id="source"><pre>&lt;web-app>
+  
+  &lt;servlet>
+    &lt;servlet-name>jibx-ws-hello-soap&lt;/servlet-name>
+    &lt;servlet-class>org.jibx.ws.http.servlet.WsServlet&lt;/servlet-class>
+    &lt;init-param>
+      &lt;param-name>welcome-service&lt;/param-name>
+      &lt;param-value>welcome-service.xml&lt;/param-value>
+    &lt;/init-param>
+  &lt;/servlet>
+  
+  &lt;servlet-mapping>
+    &lt;servlet-name>jibx-ws-hello-soap&lt;/servlet-name>
+    &lt;url-pattern>/&lt;/url-pattern>
+  &lt;/servlet-mapping>
+ 
+&lt;/web-app>
+</pre></div>
+
+<p>The service definition file specifies the name of the service class and the method to be invoked:</p>
+
+<div id="source"><pre>&lt;service name="jibxws.example.hello">
+  &lt;service-class>org.jibx.ws.example.hello.soap.server.HelloServer&lt;/service-class>
+  &lt;operation method="welcomeService"/>
+&lt;/service>
+</pre></div>
+
+<p>In this example, the service implementation is a simple method:</p>
+
+<div id="source"><pre>
+    public Welcome welcomeService(Greetee greeetee) {
+        return new Welcome("Hello " + greeetee.getName() + "!");
+    }
+</pre></div>
+
+<p>On the server side, the JiBX/WS framework determines which binding to use based on the type of the parameters to the
+service operation. On invocation, the framework unmarshals the body of the SOAP request to a Java object, determines which
+service method to call based on the type of the unmarshalled request object, calls the service method and marshals the
+response object as the body of the SOAP response.</p>
+
+<h3><a name="pox-hello">POX Hello World Application</a></h3>
+
+<p>This example is almost identical to the <a href="#soap-hello">SOAP Hello World</a> example, except that it sends
+the payload using POX (Plain Old XML) rather than as the body of SOAP messages.</p>
+
+<p><code>HelloClient</code> creates a <code>PoxClient</code> rather than a <code>SoapClient</code>. On the server
+side, the service definition file <code>welcome-service.xml</code> contains the extra attribute <code>
+protocol="POX".</code></p>
+
+<h3><a name="spring-hello">Spring Hello World Application</a></h3>
+
+<p>This example configures the JiBX/WS server and client using <a href="%spring%">Spring</a>.
+
+<p>The source for this application is under <code>examples/spring/build/src</code>. The build file is <code>examples/spring/build/soap/build.xml</code>.</p>
+
+<p>The <code>org/jibx/ws/example/spring/hello/soap/server/</code> source directory contains the server configuration.
+The <code>web.xml</code> file configures the servlet to use the <code>WsSpringServlet</code>
+class. <code>WsSpringServlet</code> is an extension of Spring's <code>FrameworkServlet</code> class, customized to
+ work with JiBX/WS. By default, the Spring application context will be loaded from an XML file whose name is based
+ on the <code>servlet-name</code>.  In this case, since the <code>servlet-name</code> is 
+ <code>jibx-ws-spring-hello-soap</code>, the context is loaded from the file 
+ <code>jibx-ws-spring-hello-soap-servlet.xml</code>.</p>
+ 
+ <p>The Spring configuration file contains:</p>
+ <div id="source"><pre>
+  &lt;bean id="helloService" class="org.jibx.ws.example.spring.hello.soap.server.HelloServer">
+    &lt;property name="greeting" value="Hola"/>
+  &lt;/bean>
+  
+  &lt;bean id="serviceDefinition" class="org.jibx.ws.server.ServiceDefinition" init-method="init">
+    &lt;property name="serviceObject" ref="helloService" /> 
+    &lt;property name="operationDefinitions">
+      &lt;list>
+        &lt;bean class="org.jibx.ws.server.OperationDefinition" >
+          &lt;property name="methodName" value="welcomeService" />
+        &lt;/bean>
+      &lt;/list>
+    &lt;/property>
+  &lt;/bean>
+  
+  &lt;bean id="serviceMapper" class="org.jibx.ws.http.servlet.SingleServiceMapper"> 
+    &lt;property name="serviceDefinition" ref="serviceDefinition"/>
+  &lt;/bean>
+  </pre></div>
+ 
+
+<p><code>WsSpringServlet</code> depends on a <code>serviceMapper</code> bean.  In this case, the application is only
+exposing a single web service, and it uses the <code>SingleServiceMapper</code> class.  The 
+<code>serviceDefinition</code> bean defines the web service as exposing a single operation based on the 
+<code>welcomeService</code> method of the <code>helloService</code> bean.</p>
+
+<p>[<b>Note:</b> It is planned to simplify the Spring configuration in a <a href="%status%">future</a> release using a custom namespace.]</p>
+
+<p>By default, Spring beans are configured using <code>Singleton</code> scope. Using the configuration above, a single 
+instance of the <code>helloService</code> bean is shared by all the servlet instances handling requests for our web 
+service. The output from the Spring example confirms that the same instance is being used for each request:</p>
+
+<pre>
+     [java] Hola World from org.jibx.ws.example.spring.hello.soap.server.HelloServer@25927275 !
+     [java] Hola World from org.jibx.ws.example.spring.hello.soap.server.HelloServer@25927275 !
+     [java] Hola World from org.jibx.ws.example.spring.hello.soap.server.HelloServer@25927275 !
+</pre>
+
+
+<h4>Spring Request Scope</h4>
+<p>Spring-based applications will normally be written in a thread-safe manner where <code>Singleton</code> scope is 
+appropriate. However, if you require a different object per request, this can be achieved using Spring's 
+<code>Request</code> scope.</p>
+
+<p>The <code>org/jibx/ws/example/spring/request/scope/server</code> directory contains the server configuration 
+required to to use Spring's request scope. The <code>web.xml</code> file contains an additional 
+<code>listener-class</code>:
+
+<pre>
+  &lt;listener>
+    &lt;listener-class>org.springframework.web.context.request.RequestContextListener&lt;/listener-class>
+  &lt;/listener>
+</pre>
+
+<p>, and the Spring configuration file contains an additional <code>scope</code> attribute, and an 
+<code>aop:scoped-proxy</code> element to inject a Spring AOP proxy object. 
+<pre>
+  &lt;bean id="helloService" class="org.jibx.ws.example.spring.hello.soap.server.HelloServer" scope="request">
+    &lt;property name="greeting" value="Namaste"/>
+    &lt;aop:scoped-proxy />    
+  &lt;/bean>
+</pre> 
+
+<p>The output from this example shows that a different instance is being used per request:</p>
+<pre>
+     [java] Namaste World from org.jibx.ws.example.spring.hello.soap.server.HelloServer@635c80a4 !
+     [java] Namaste World from org.jibx.ws.example.spring.hello.soap.server.HelloServer@55641ee0 !
+     [java] Namaste World from org.jibx.ws.example.spring.hello.soap.server.HelloServer@20272fec !
+</pre>
+
+<h3><a name="soap-headers">SOAP Headers Application</a></h3>
+
+<p>This example, in the examples/soap-headers directory, builds on the <a href="#soap-hello">SOAP Hello World</a> example, by adding a SOAP header to the
+request that includes the locale of the user. The server responds with a locale-specific greeting. The SOAP response
+includes a header with a (hard-coded) QOS measure.</p>
+
+<p>The example includes an additional binding file <code>example-binding.xml</code> which includes the bindings for
+<code>Locale</code> and <code>QOS</code>. (These additional bindings could equally have been included in the existing
+binding file <code>hello-binding.xml</code>).</p>
+
+<p>The client application calls <code>client.addOutHeader(new Locale("fr"));</code> to add an outbound SOAP header
+containing the french Locale. In order to read the response header, the client includes the following lines:</p>
+
+<div id="source"><pre>
+        UnmarshallingInHandler headerHandler = new UnmarshallingInHandler(QOS.class);
+        client.addInHeaderHandler(headerHandler);
+        ...
+        System.out.println("QOS: " + headerHandler.getPayload());
+</pre></div>
+
+<p>On the server side, the service definition file includes the following two additional handlers:</p>
+
+<div id="source"><pre>
+  &lt;handler-class class="org.jibx.ws.io.handler.ContextAttributeUnmarshallingInHandler">
+    &lt;constructor-arg value="org.jibx.ws.example.headers.common.Locale"/>
+    &lt;constructor-arg value="example.locale"/>
+  &lt;/handler-class>
+  &lt;handler-class class="org.jibx.ws.io.handler.ContextAttributeMarshallingOutHandler">
+    &lt;constructor-arg value="org.jibx.ws.example.headers.common.QOS"/>
+    &lt;constructor-arg value="comm.qos"/>
+  &lt;/handler-class>
+</pre></div>
+
+<p>The first handler is of type <code>ContextAttributeUnmarshallingInHandler</code> which unmarshalls the SOAP header and
+stores the resulting object in the inbound message context. In this case, the <code>Locale</code> object is stored in
+the <code>example.locale</code> attribute. The <code>HelloServer.welcomeService()</code> method reads the the <code>Locale</code>
+object from this attribute with the call:</p>
+
+<div id="source"><pre>
+        Locale locale = (Locale) inCtx.getAttribute("example.locale");
+</pre></div>
+
+<p>To set the outbound header object, the <code>welcomeService</code> method sets the attribute <code>comm.qos</code>
+on the outbound message context. The second handler above is configured to read from <code>comm.qos</code> and marshal
+the QOS object in an outbound SOAP header.</p>
+
+<h3><a name="soap-fault-trace">SOAP Fault with Stack Trace Details Application</a></h3>
+
+<p>This example, in the examples/soap-fault-trace directory, builds on the <a href="#soap-hello">SOAP Hello World</a> example, by throwing an exception if the
+greetee name doesn't start with the letter 'Z'. The JiBX/WS framework catches the exception and returns a SOAP fault.
+By default the stack trace is not included in the response.  This example adds the following element to the service
+definition file <code>service-mapping.xml</code> to request the stack trace to be included:</p>
+
+<div id="source"><pre>
+    &lt;fault include-stack-trace="true"/>
+</pre></div>
+
+<p>To configure the client application to read the Exception details of the SOAP Fault, the following line is added:</p>
+<div id="source"><pre>
+    client.addInFaultDetailsHandler(new ExceptionReader());
+</pre></div>
+
+<h3><a name="soap-fault-custom">SOAP Fault with Custom Fault Actor and  Details Application</a></h3>
+
+<p>This example, in the examples/soap-fault-custom directory, builds on the <a href="#soap-hello">SOAP Hello World</a> example, by returning a fault if the
+greetee name doesn't start with the letter 'Z'. In this example, a custom SOAP Fault is returned including an actor
+and custom SOAP Fault details.</p>
+
+<p>On the server side, the service throws a <code>SoapFaultException</code> containing a <code>SoapFault</code> object 
+which includes the actor and adds a fault details writer:</p>
+<div id="source"><pre>
+    SoapFault fault = new SoapFault(SoapFault.FAULT_CODE_SERVER, "ZorroFault in welcomeService", 
+        "http://example.ws.jibx.org/someactor");
+        
+    fault.addDetailWriter(new PayloadMarshaller(zorroFault));
+    
+    throw new SoapFaultException(fault);
+</pre></div>
+<p>The <code>example-binding.xml</code> file contains the binding of the <code>ZorroFault</code> class to XML. The 
+JiBX/WS framework catches the SoapFaultException and marshals the custom SoapFault.</p>
+<p>No extra configuration is required on the client side, since the fault detail element is defined in the binding
+file that was passed to the <code>SoapClient</code> constructor.  The client catches the <code>SoapFaultException</code>
+and prints out the name and message from the custom fault details element.</p>
+
+<h3><a name="custom-exception-handler">Custom Exception Handler Example Application</a></h3>
+<p>This example, in the examples/custom-exception-handler directory, demonstrates the use of a custom <a href="%define%#service-exception-handler-class">
+<code>service-exception-handler-class</code></a> to override the default
+server side exception handling.  Custom exception handlers are not normally needed for SOAP services, since the 
+built-in <a href="%soap%#fault">SOAP Fault handler</a> is sufficient.  However for POX applications, there is no 
+standard fault mechanism and it will often be necessary to override the default <a href="%pox%#exception">exception handler</a> 
+provided with JiBX/WS.</p> 
+
+<p>On the server side, the <code>ExceptionHandler</code> class implements the <code>ServiceExceptionHandler</code> 
+interface.  On exception, it creates a new <code>ServiceError</code> object and sends an outbound message using the 
+marshaled form of this object as the body.</p>
+
+<p>The client code checks the type of the unmarshalled body object to determine whether it is a ServiceError.</p> 
+
+<h3><a name="http-servlet-interceptor">HTTP Servlet Interceptor Example Application</a></h3>
+
+<p>This example, in the examples/http-servlet-interceptor directory,  demonstrates the use of input and output <a href="%define%#stream-interceptor">
+<code>stream interceptors</code></a>  to log the raw request and response messages, both on the client 
+and server side.</p>
+
+<p>Note that transport interceptors are limited to working with HTTP, and are only useful in the limited cases where you 
+need access to the raw messages. For most cases, XML stream interceptors are preferred.  These will be implemented in 
+a <a href="%status%">future release</a>.</p>    
+
+<h3><a name="seismic">Seismic Example Application</a></h3>
+
+<p>This example, in the examples/seismic directory, demonstrates many of the JiBX/WS features in a single application. The application can be run using
+SOAP or POX, over HTTP or TCP, and using either a text or XBIS encoding.<!-- In addition the application demonstrates
+dynamic WSDL generation.--></p>
+
+<p>The example runs queries against an in-memory database on the server to retrieve information about moderate
+to large earthquakes recorded around the world during a particular time span. The client generates a pseudo-random
+sequence of queries based on command line arguments, sending each query to the server which then responds with the set
+of matching quakes.</p>
+
+<p>Here's the <i>quake-service.xml</i> service definition file referenced by the <i>web.xml</i>:</p>
+
+<p></p>
+
+<div id="source"><pre>&lt;service name="quake">
+  <!-- &lt;schema>SeismicSchema.xsd&lt;/schema>
+  &lt;wsdl-uri>http://seismic.sosnoski.com/wsdl&lt;/wsdl-uri>
+  -->&lt;service-class>com.sosnoski.seismic.server.QuakeBase&lt;/service-class>
+  &lt;operation method="process"/>
+  &lt;wsdl file="/SeismicService.wsdl" transformLocation="true"/>
+&lt;/service>
+</pre></div>
+
+<p>These files configure a single web service at the access path <i>http://server:port/webapp/quake-service</i>,
+where <i>server:port</i> is the name and port number for the servlet engine (such as <i>localhost:8080</i> for the
+standard Tomcat configuration) and <i>webapp</i> is the name of the web application (normally the name of the <i>.war</i>
+file deployed to the server).</p>
+
+<p>The <i>&lt;wsdl file="/SeismicService.wsdl"></i> definition causes JiBX/WS to return a WSDL definition on an
+HTTP GET request.  In this example, a browser query to http://localhost:8080/jibx-ws-seismic/soap/quake-service?wsdl
+returns the contents of the <i>/SeismicService.wsdl</i> file (relative to the <i>WEB-INF/classes folder</i> of the 
+<i>jibx-ws-seismic.war</i> file).  The service location in the WSDL is <a href="%define%#transformLocation">transformed</a>
+based on the incoming WSDL request URL.
+</p>
+
+<!-- <p>As long as a schema definition and WSDL URI are supplied by the service definition file, the JiBX/WS servlet
+supports dynamic WSDL generation. Here's the WSDL returned by a browser query to
+http://localhost:8080/JibxSoapExample/quake-service?WSDL when the example is deployed as <i>JibxSoapExample.war</i> to a
+local Tomcat installation (slightly reformatted for line length):</p>
+
+<p></p>
+
+<div id="source"><pre>&lt;wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  targetNamespace="http://seismic.sosnoski.com/wsdl"
+  xmlns:wns="http://seismic.sosnoski.com/wsdl"
+  xmlns:tns="http://www.sosnoski.com/quakes">
+ &lt;wsdl:types>
+  &lt;schema xmlns="http://www.w3.org/2001/XMLSchema"
+   xmlns:tns="http://www.sosnoski.com/quakes"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   elementFormDefault="qualified"
+   targetNamespace="http://www.sosnoski.com/quakes">
+   
+ &lt;element name="query">
+  &lt;complexType>
+   &lt;sequence>
+    &lt;element minOccurs="0" name="min-date" type="xsd:dateTime"/>
+    &lt;element minOccurs="0" name="max-date" type="xsd:dateTime"/>
+    &lt;element minOccurs="0" name="min-long" type="xsd:float"/>
+    &lt;element minOccurs="0" name="max-long" type="xsd:float"/>
+    &lt;element minOccurs="0" name="min-lat" type="xsd:float"/>
+    &lt;element minOccurs="0" name="max-lat" type="xsd:float"/>
+    &lt;element minOccurs="0" name="min-mag" type="xsd:float"/>
+    &lt;element minOccurs="0" name="max-mag" type="xsd:float"/>
+    &lt;element minOccurs="0" name="min-depth" type="xsd:float"/>
+    &lt;element minOccurs="0" name="max-depth" type="xsd:float"/>
+   &lt;/sequence>
+  &lt;/complexType>
+ &lt;/element>
+ 
+ &lt;complexType name="Region">
+  &lt;simpleContent>
+   &lt;extension base="xsd:string">
+    &lt;attribute name="ident" type="xsd:ID"/>
+    &lt;attribute name="index" type="xsd:int"/>
+   &lt;/extension>
+  &lt;/simpleContent>
+ &lt;/complexType>
+ 
+ &lt;complexType name="Quake">
+  &lt;attribute name="time" type="xsd:dateTime"/>
+  &lt;attribute name="millis" type="xsd:int"/>
+  &lt;attribute name="latitude" type="xsd:float"/>
+  &lt;attribute name="longitude" type="xsd:float"/>
+  &lt;attribute name="depth" type="xsd:float"/>
+  &lt;attribute name="magnitude" type="xsd:float"/>
+  &lt;attribute name="method" type="xsd:token"/>
+  &lt;attribute name="region" type="xsd:IDREF"/>
+ &lt;/complexType>
+ 
+ &lt;complexType name="QuakeSet">
+  &lt;sequence>
+   &lt;element name="area-name" type="xsd:string"/>
+   &lt;element name="regions">
+    &lt;complexType>
+     &lt;sequence>
+      &lt;element maxOccurs="unbounded" minOccurs="0" name="region"
+       type="tns:Region"/>
+     &lt;/sequence>
+     &lt;attribute name="count" type="xsd:int"/>
+    &lt;/complexType>
+   &lt;/element>
+   &lt;element name="quakes">
+    &lt;complexType>
+     &lt;sequence>
+      &lt;element maxOccurs="unbounded" minOccurs="0" name="quake"
+       type="tns:Quake"/>
+     &lt;/sequence>
+     &lt;attribute name="count" type="xsd:int"/>
+    &lt;/complexType>
+   &lt;/element>
+  &lt;/sequence>
+ &lt;/complexType>
+ 
+ &lt;element name="results">
+  &lt;complexType>
+   &lt;sequence>
+    &lt;element maxOccurs="unbounded" minOccurs="0" name="result-set"
+     type="tns:QuakeSet"/>
+   &lt;/sequence>
+   &lt;attribute name="count" type="xsd:int"/>
+  &lt;/complexType>
+ &lt;/element>
+ 
+&lt;/schema>
+ &lt;/wsdl:types>
+ &lt;wsdl:message name="Query">
+  &lt;wsdl:part name="query" element="tns:query"/>
+ &lt;/wsdl:message>
+ &lt;wsdl:message name="Response">
+  &lt;wsdl:part name="results" element="tns:results"/>
+ &lt;/wsdl:message>
+ &lt;wsdl:portType name="quakeInterface">
+  &lt;wsdl:operation name="process">
+   &lt;wsdl:input message="wns:Query"/>
+   &lt;wsdl:output message="wns:Response"/>
+  &lt;/wsdl:operation>
+ &lt;/wsdl:portType>
+ &lt;wsdl:binding name="quakeBinding" type="wns:quakeInterface">
+  &lt;wsdl:operation name="process">
+   &lt;wsdl:input>
+    &lt;soap:body use="literal"/>
+   &lt;/wsdl:input>
+   &lt;wsdl:output>
+    &lt;soap:body use="literal"/>
+   &lt;/wsdl:output>
+   &lt;soap:operation soapAction=""/>
+  &lt;/wsdl:operation>
+  &lt;soap:binding transport="http://schemas.xmlsoap.org/soap/http"
+   style="document"/>
+ &lt;/wsdl:binding>
+ &lt;wsdl:service name="quakeService">
+  &lt;wsdl:port name="quake" binding="wns:quakeBinding">
+   &lt;soap:address location="http://localhost:8080/JibxSoapExample/quake-service"/>
+  &lt;/wsdl:port>
+ &lt;/wsdl:service>
+&lt;/wsdl:definitions>
+</pre></div>
+
+<p>The schema definition referenced by the service definition file is just embedded directly into the generated
+WSDL, with all other WSDL components generated by JiBX/WS based on the configuration. This includes the actual service
+location, so that if the same service is accessed via multiple paths the returned WSDL will properly reflect the actual
+request path.</p>
+-->
+<p>The <i>/examples/seismic/run.sh</i> script gives another way of running the client application, as is used for <a
+	href="http://www.sosnoski.com/presents/cleansoap/index.html">performance testing comparisons</a> with other frameworks.</p>
+
+</div>
+</div>
+</div>
+
+</body>
+</html>

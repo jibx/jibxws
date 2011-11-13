@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<!-- ===================================================================
+Ant build file for JiBX/WS
+
+This is a build file for use with the Ant build tool.  See http://jakarta.apache.org/ant/index.html for more info.  
+This build.xml file has been tested with Ant version 1.7.0.
+
+The build files assume that the required libraries are in the dep-lib folder. If this is not the case, they can be 
+downloaded using the retrieve target. The retrieve target uses Apache Ivy to manage its dependencies.
+It will download the Ivy jar file to your ${user.home}/.ivy2 folder, if the required version is not already
+in this folder.  
+===================================================================+ -->
+<project name="jibx-ws" basedir=".." default="debug">
+         
+  <property name="build.dir" location="${basedir}/build" />
+  <property name="ivysettings.file" location="${build.dir}/ivysettings.xml" />
+  
+  <import file="${build.dir}/ant/common.xml"/>
+  <import file="${build.dir}/ant/clean.xml"/>
+  <import file="${build.dir}/ant/compile.xml"/>
+  <import file="${build.dir}/ant/test.xml"/>
+  <import file="${build.dir}/ant/doc.xml"/>
+  <import file="${build.dir}/ant/package.xml"/>
+  <import file="${build.dir}/ant/quality.xml"/>
+  <import file="${build.dir}/ant/publish.xml"/>
+  
+  <target name="build" depends="clean,compile,bind,jar" description="Create a full build" />
+  <target name="debug" depends="setdebug,build" />
+  <target name="develop" depends="debug,devdoc" />
+  <target name="distrib" depends="setdebug,zip-distrib" description="Create the distribution" />
+  
+</project>

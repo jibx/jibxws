@@ -1,0 +1,20 @@
+<!--
+Ant build file for JiBX/WS hello example using the Plain Old XML (POX) protocol.
+
+This build file "extends" the build file at ../../../common.xml.  Run "ant -p" to view the full list of available targets.
+
+This build.xml file has been tested with ant version 1.6.5. 
+-->
+<project name="JiBX/WS Hello POX Example" default="build">
+  <property name="jibxws.examples.dir" value="../../.."/>
+  <property name="client.classname" value="org.jibx.ws.example.hello.pox.client.HelloClient"/>
+  <property name="client.src.includes" value="**/pox/client/*.*" />
+  <property name="server.src.includes" value="**/pox/server/*.*" />
+  <property name="web-inf.file.includes" value="**/pox/server/*.xml" />
+  <property name="warname" value="jibx-ws-hello-pox"/>
+  <property name="root" value="${basedir}/.." description="Root folder of example"/>
+
+  <fileset id="binding.fileset" file="../src/org/jibx/ws/example/hello/common/hello-binding.xml"/>
+
+  <import file="${jibxws.examples.dir}/common.xml" />
+</project>

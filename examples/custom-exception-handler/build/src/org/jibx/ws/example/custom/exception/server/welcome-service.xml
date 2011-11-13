@@ -1,0 +1,5 @@
+<service name="jibxws.example.hello">
+  <service-class>org.jibx.ws.example.custom.exception.server.HelloServer</service-class>
+  <operation method="welcomeService"/>
+  <service-exception-handler-class>org.jibx.ws.example.custom.exception.server.ExceptionHandler</service-exception-handler-class>
+</service>

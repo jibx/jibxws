@@ -1,0 +1,1278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local-project language="java" associate="file:/rwork/jibx-s101-repo/jibx-ws" version="3.2.361" flavor="j2se">
+   <property name="hide-externals" value="true" />
+   <property name="detail-mode" value="true" />
+   <classpath>
+      <classpathentry kind="lib" path="/local/work/jibx/jibxws/lib/jibx-ws.jar" />
+   </classpath>
+   <excludes>
+      <exclude expression="*.JiBX_*" />
+      <exclude expression="*.wsdl.*" active="false" />
+      <exclude expression="*.WsdlProvider" active="false" />
+   </excludes>
+   <transformations>
+      <transformation in="*.wsdl.*" out="delete.*.wsdl.*" active="false" />
+      <transformation in="*.*Processor" out="*.common.*Processor" />
+      <transformation in="*.WsdlProvider" out="delete.*.WsdlProvider" active="false" />
+      <transformation in="org.jibx.ws.process.InMessageAttributes" out="org.jibx.ws.transport.InMessageAttributes" active="false" />
+      <transformation in="*.transport.tcp.*" out="*.transport.tcp.client.*" active="false" />
+   </transformations>
+   <grid-set sep="." version="3.2.361">
+      <grid name="JiBX/WS High Level Architecture" enforce="true" strict="false">
+         <row>
+            <cell name="Pluggable Transports" vexpanded="true" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="tcp" pattern="org.jibx.ws.tcp.*" vexpanded="true" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="client" pattern="org.jibx.ws.tcp.client.?" vexpanded="false" visibility="public">
+                                 <grid>
+                                    <row>
+                                       <cell name="TcpTransport" pattern="org.jibx.ws.tcp.client.TcpTransport" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="TcpTransportOptions" pattern="org.jibx.ws.tcp.client.TcpTransportOptions" vexpanded="true" visibility="public" />
+                                       <cell name="TcpChannel" pattern="org.jibx.ws.tcp.client.TcpChannel" vexpanded="true" visibility="public" />
+                                    </row>
+                                 </grid>
+                              </cell>
+                              <cell name="server" pattern="org.jibx.ws.tcp.server.?" vexpanded="false" visibility="public">
+                                 <grid>
+                                    <row>
+                                       <cell name="TcpServer" pattern="org.jibx.ws.tcp.server.TcpServer" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="SocketRunner" pattern="org.jibx.ws.tcp.server.SocketRunner" vexpanded="true" visibility="public" />
+                                    </row>
+                                 </grid>
+                              </cell>
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="http" pattern="org.jibx.ws.http.*" vexpanded="true" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="client.javase" pattern="org.jibx.ws.http.client.javase.?" vexpanded="false" visibility="public">
+                                 <grid>
+                                    <row>
+                                       <cell name="HttpTransport" pattern="org.jibx.ws.http.client.javase.HttpTransport" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="HttpChannel" pattern="org.jibx.ws.http.client.javase.HttpChannel" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="HttpTransportOptions" pattern="org.jibx.ws.http.client.javase.HttpTransportOptions" vexpanded="true" visibility="public" />
+                                    </row>
+                                 </grid>
+                              </cell>
+                              <cell name="servlet" pattern="org.jibx.ws.http.servlet.?" vexpanded="false" visibility="public">
+                                 <grid>
+                                    <row>
+                                       <cell name="WsServlet" pattern="org.jibx.ws.http.servlet.WsServlet" vexpanded="true" visibility="public" />
+                                       <cell name="WsSpringServlet" pattern="org.jibx.ws.http.servlet.WsSpringServlet" vexpanded="true" visibility="public" />
+                                       <cell name="SingleServiceMapper" pattern="org.jibx.ws.http.servlet.SingleServiceMapper" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="WsServletDelegate" pattern="org.jibx.ws.http.servlet.WsServletDelegate" vexpanded="true" visibility="public" />
+                                       <cell name="PathBasedServiceMapper" pattern="org.jibx.ws.http.servlet.PathBasedServiceMapper" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="HttpServletOptions" pattern="org.jibx.ws.http.servlet.HttpServletOptions" vexpanded="true" visibility="public" />
+                                       <cell name="ServiceMapper" pattern="org.jibx.ws.http.servlet.ServiceMapper" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="HttpServletOptionsDefinition" pattern="org.jibx.ws.http.servlet.HttpServletOptionsDefinition" vexpanded="true" visibility="public" />
+                                    </row>
+                                 </grid>
+                              </cell>
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="encoding" pattern="org.jibx.ws.encoding.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="DimeOutputBuffer" pattern="org.jibx.ws.encoding.dime.DimeOutputBuffer" vexpanded="true" visibility="public" />
+                              <cell name="DimeInputBuffer" pattern="org.jibx.ws.encoding.dime.DimeInputBuffer" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="DimeCommon" pattern="org.jibx.ws.encoding.dime.DimeCommon" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+            <cell name="Pluggable Protocols" vexpanded="true" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="soap" pattern="org.jibx.ws.soap.*" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="SoapProtocol" pattern="org.jibx.ws.soap.SoapProtocol" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="server" pattern="org.jibx.ws.soap.server.?" vexpanded="true" visibility="public">
+                                 <grid>
+                                    <row>
+                                       <cell name="SoapFaultHandler" pattern="org.jibx.ws.soap.server.SoapFaultHandler" vexpanded="true" visibility="public" />
+                                       <cell name="SoapService" pattern="org.jibx.ws.soap.server.SoapService" vexpanded="true" visibility="public" />
+                                    </row>
+                                 </grid>
+                              </cell>
+                              <cell name="client" pattern="org.jibx.ws.soap.client.?" vexpanded="true" visibility="public">
+                                 <grid>
+                                    <row>
+                                       <cell name="SoapClient" pattern="org.jibx.ws.soap.client.SoapClient" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="SoapFaultResolver" pattern="org.jibx.ws.soap.client.SoapFaultResolver" vexpanded="true" visibility="public" />
+                                    </row>
+                                 </grid>
+                              </cell>
+                           </row>
+                           <row>
+                              <cell name="common" pattern="org.jibx.ws.soap.common.?" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="soap" pattern="org.jibx.ws.soap.?" vexpanded="true" visibility="public">
+                                 <grid>
+                                    <row>
+                                       <cell name="SoapPhase" pattern="org.jibx.ws.soap.SoapPhase" vexpanded="true" visibility="public" />
+                                       <cell name="SoapWriter" pattern="org.jibx.ws.soap.SoapWriter" vexpanded="true" visibility="public" />
+                                       <cell name="WsNotUnderstoodException" pattern="org.jibx.ws.soap.WsNotUnderstoodException" vexpanded="true" visibility="public" />
+                                       <cell name="SoapFaultException" pattern="org.jibx.ws.soap.SoapFaultException" vexpanded="true" visibility="public" />
+                                       <cell name="SoapReader" pattern="org.jibx.ws.soap.SoapReader" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="SoapFault" pattern="org.jibx.ws.soap.SoapFault" vexpanded="true" visibility="public" />
+                                       <cell name="SoapConstants" pattern="org.jibx.ws.soap.SoapConstants" vexpanded="true" visibility="public" />
+                                       <cell name="SoapVersion" pattern="org.jibx.ws.soap.SoapVersion" vexpanded="true" visibility="public" />
+                                    </row>
+                                 </grid>
+                              </cell>
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="pox" pattern="org.jibx.ws.pox.*" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="pox" pattern="org.jibx.ws.pox.?" vexpanded="false" visibility="public">
+                                 <grid>
+                                    <row>
+                                       <cell name="PoxProtocol" pattern="org.jibx.ws.pox.PoxProtocol" vexpanded="true" visibility="public" />
+                                    </row>
+                                 </grid>
+                              </cell>
+                           </row>
+                           <row>
+                              <cell name="client" pattern="org.jibx.ws.pox.client.?" vexpanded="false" visibility="public">
+                                 <grid>
+                                    <row>
+                                       <cell name="PoxClient" pattern="org.jibx.ws.pox.client.PoxClient" vexpanded="true" visibility="public" />
+                                    </row>
+                                 </grid>
+                              </cell>
+                           </row>
+                           <row>
+                              <cell name="common" pattern="org.jibx.ws.pox.common.?" vexpanded="true" visibility="public" />
+                              <cell name="server" pattern="org.jibx.ws.pox.server.?" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+            <cell name="Pluggable Codecs" vexpanded="true" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="text" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="TextCodecFactory" pattern="org.jibx.ws.codec.TextCodecFactory" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="xbis" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="XbisCodecFactory" pattern="org.jibx.ws.codec.XbisCodecFactory" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="Core Framework" vexpanded="true" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="protocol" pattern="org.jibx.ws.protocol.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="ProtocolDirectory" pattern="org.jibx.ws.protocol.ProtocolDirectory" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="Protocol" pattern="org.jibx.ws.protocol.Protocol" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="server" pattern="org.jibx.ws.server.*" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="server" pattern="org.jibx.ws.server.?" vexpanded="true" visibility="public">
+                                 <grid>
+                                    <row>
+                                       <cell name="ServicePool" pattern="org.jibx.ws.server.ServicePool" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="ServiceFactory" pattern="org.jibx.ws.server.ServiceFactory" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="InterceptorDefinition" pattern="org.jibx.ws.server.InterceptorDefinition" vexpanded="true" visibility="public" />
+                                       <cell name="Service" pattern="org.jibx.ws.server.Service" vexpanded="true" visibility="public" />
+                                       <cell name="SchemaSource" pattern="org.jibx.ws.server.SchemaSource" vexpanded="true" visibility="public" />
+                                       <cell name="SimplePool" pattern="org.jibx.ws.server.SimplePool" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="MediaTypeMapper" pattern="org.jibx.ws.server.MediaTypeMapper" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="Operation" pattern="org.jibx.ws.server.Operation" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="ServiceDefinition" pattern="org.jibx.ws.server.ServiceDefinition" vexpanded="true" visibility="public" />
+                                       <cell name="OperationDefinition" pattern="org.jibx.ws.server.OperationDefinition" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="BindingLocator" pattern="org.jibx.ws.server.BindingLocator" vexpanded="true" visibility="public" />
+                                       <cell name="TransportOptionsDefinition" pattern="org.jibx.ws.server.TransportOptionsDefinition" vexpanded="true" visibility="public" />
+                                       <cell name="ServiceExceptionHandler" pattern="org.jibx.ws.server.ServiceExceptionHandler" vexpanded="true" visibility="public" />
+                                       <cell name="HandlerDefinition" pattern="org.jibx.ws.server.HandlerDefinition" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="ObjectDefinition" pattern="org.jibx.ws.server.ObjectDefinition" vexpanded="true" visibility="public" />
+                                       <cell name="TransportOptions" pattern="org.jibx.ws.server.TransportOptions" vexpanded="true" visibility="public" />
+                                    </row>
+                                 </grid>
+                              </cell>
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="client" pattern="org.jibx.ws.client.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="Client" pattern="org.jibx.ws.client.Client" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="process" pattern="org.jibx.ws.process.*" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="process" pattern="org.jibx.ws.process.?" vexpanded="true" visibility="public">
+                                 <grid>
+                                    <row>
+                                       <cell name="OutputCompletionListener" pattern="org.jibx.ws.transport.OutputCompletionListener" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="OutputCompletionEvent" pattern="org.jibx.ws.transport.OutputCompletionEvent" vexpanded="true" visibility="public" />
+                                       <cell name="Processor" pattern="org.jibx.ws.process.common.Processor" vexpanded="true" visibility="public" />
+                                    </row>
+                                 </grid>
+                              </cell>
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="transport" pattern="org.jibx.ws.transport.*" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="transport" pattern="org.jibx.ws.transport.?" vexpanded="false" visibility="public">
+                                 <grid>
+                                    <row>
+                                       <cell name="StreamBufferInPool" pattern="org.jibx.ws.transport.StreamBufferInPool" vexpanded="true" visibility="public" />
+                                       <cell name="StreamBufferOutPool" pattern="org.jibx.ws.transport.StreamBufferOutPool" vexpanded="true" visibility="public" />
+                                       <cell name="SimpleDuplexConnection" pattern="org.jibx.ws.transport.SimpleDuplexConnection" vexpanded="true" visibility="public" />
+                                       <cell name="TransportDirectory" pattern="org.jibx.ws.transport.TransportDirectory" vexpanded="true" visibility="public" />
+                                       <cell name="InputStreamInterceptable" pattern="org.jibx.ws.transport.InputStreamInterceptable" vexpanded="true" visibility="public" />
+                                       <cell name="OutConnectionBase" pattern="org.jibx.ws.transport.OutConnectionBase" vexpanded="true" visibility="public" />
+                                       <cell name="Property" pattern="org.jibx.ws.transport.Property" vexpanded="true" visibility="public" />
+                                       <cell name="WsTransportException" pattern="org.jibx.ws.transport.WsTransportException" vexpanded="true" visibility="public" />
+                                       <cell name="OutServerConnection" pattern="org.jibx.ws.transport.OutServerConnection" vexpanded="true" visibility="public" />
+                                       <cell name="OutputStreamInterceptable" pattern="org.jibx.ws.transport.OutputStreamInterceptable" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="Transport" pattern="org.jibx.ws.transport.Transport" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="Channel" pattern="org.jibx.ws.transport.Channel" vexpanded="true" visibility="public" />
+                                       <cell name="TransportOptions" pattern="org.jibx.ws.transport.TransportOptions" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="DuplexConnection" pattern="org.jibx.ws.transport.DuplexConnection" vexpanded="true" visibility="public" />
+                                       <cell name="MessageProperties" pattern="org.jibx.ws.transport.MessageProperties" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="InConnection" pattern="org.jibx.ws.transport.InConnection" vexpanded="true" visibility="public" />
+                                       <cell name="OutConnection" pattern="org.jibx.ws.transport.OutConnection" vexpanded="true" visibility="public" />
+                                    </row>
+                                 </grid>
+                              </cell>
+                           </row>
+                           <row>
+                              <cell name="interceptor" pattern="org.jibx.ws.transport.interceptor.?" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="codec" pattern="org.jibx.ws.codec.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="CodecCache" pattern="org.jibx.ws.codec.CodecCache" vexpanded="true" visibility="public" />
+                              <cell name="CodecPool" pattern="org.jibx.ws.codec.CodecPool" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="CodecDirectory" pattern="org.jibx.ws.codec.CodecDirectory" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="CodecFactory" pattern="org.jibx.ws.codec.CodecFactory" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="XmlCodec" pattern="org.jibx.ws.codec.XmlCodec" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="MediaType" pattern="org.jibx.ws.codec.MediaType" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="handler" pattern="org.jibx.ws.io.handler.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="MarshallingOutHandler" pattern="org.jibx.ws.io.handler.MarshallingOutHandler" vexpanded="true" visibility="public" />
+                              <cell name="ExceptionWriter" pattern="org.jibx.ws.io.handler.ExceptionWriter" vexpanded="true" visibility="public" />
+                              <cell name="ContextAttributeUnmarshallingInHandler" pattern="org.jibx.ws.io.handler.ContextAttributeUnmarshallingInHandler" vexpanded="true" visibility="public" />
+                              <cell name="UnmarshallingInHandler" pattern="org.jibx.ws.io.handler.UnmarshallingInHandler" vexpanded="true" visibility="public" />
+                              <cell name="ExceptionReader" pattern="org.jibx.ws.io.handler.ExceptionReader" vexpanded="true" visibility="public" />
+                              <cell name="ContextAttributeMarshallingOutHandler" pattern="org.jibx.ws.io.handler.ContextAttributeMarshallingOutHandler" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="InHandler" pattern="org.jibx.ws.io.handler.InHandler" vexpanded="true" visibility="public" />
+                              <cell name="OutHandler" pattern="org.jibx.ws.io.handler.OutHandler" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="context" pattern="org.jibx.ws.context.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="ExchangeContext" pattern="org.jibx.ws.context.ExchangeContext" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="OutContext" pattern="org.jibx.ws.context.OutContext" vexpanded="true" visibility="public" />
+                              <cell name="InContext" pattern="org.jibx.ws.context.InContext" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="MessageContext" pattern="org.jibx.ws.context.MessageContext" vexpanded="true" visibility="public" />
+                              <cell name="Phase" pattern="org.jibx.ws.context.Phase" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="Context" pattern="org.jibx.ws.context.Context" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="wsdl" pattern="org.jibx.ws.wsdl.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="WsdlLocationToRequestUrlAdapter" pattern="org.jibx.ws.http.servlet.WsdlLocationToRequestUrlAdapter" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="InputStreamWsdlProvider" pattern="org.jibx.ws.wsdl.InputStreamWsdlProvider" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="WsdlProvider" pattern="org.jibx.ws.wsdl.WsdlProvider" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="io" pattern="org.jibx.ws.io.*" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="io" pattern="org.jibx.ws.io.?" vexpanded="true" visibility="public">
+                                 <grid>
+                                    <row>
+                                       <cell name="MessageOptions" pattern="org.jibx.ws.io.MessageOptions" vexpanded="true" visibility="public" />
+                                       <cell name="CopiedInputStream" pattern="org.jibx.ws.io.CopiedInputStream" vexpanded="true" visibility="public" />
+                                       <cell name="CopiedOutputStream" pattern="org.jibx.ws.io.CopiedOutputStream" vexpanded="true" visibility="public" />
+                                       <cell name="UnmarshallingPayloadReader" pattern="org.jibx.ws.io.UnmarshallingPayloadReader" vexpanded="true" visibility="public" />
+                                       <cell name="MarshallingPayloadWriter" pattern="org.jibx.ws.io.MarshallingPayloadWriter" vexpanded="true" visibility="public" />
+                                       <cell name="XmlReaderWrapper" pattern="org.jibx.ws.io.XmlReaderWrapper" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="PayloadReader" pattern="org.jibx.ws.io.PayloadReader" vexpanded="true" visibility="public" />
+                                       <cell name="PayloadWriter" pattern="org.jibx.ws.io.PayloadWriter" vexpanded="true" visibility="public" />
+                                       <cell name="XmlOptions" pattern="org.jibx.ws.io.XmlOptions" vexpanded="true" visibility="public" />
+                                    </row>
+                                    <row>
+                                       <cell name="XmlEncoding" pattern="org.jibx.ws.io.XmlEncoding" vexpanded="true" visibility="public" />
+                                    </row>
+                                 </grid>
+                              </cell>
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="util" pattern="org.jibx.ws.util.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="ExpandingPool" pattern="org.jibx.ws.util.ExpandingPool" vexpanded="true" visibility="public" />
+                              <cell name="Utility" pattern="org.jibx.ws.util.Utility" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="ws" pattern="org.jibx.ws.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="UnhandledWsException" pattern="org.jibx.ws.UnhandledWsException" vexpanded="true" visibility="public" />
+                              <cell name="WsConfigurationException" pattern="org.jibx.ws.WsConfigurationException" vexpanded="true" visibility="public" />
+                              <cell name="WsBindingException" pattern="org.jibx.ws.WsBindingException" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="WsException" pattern="org.jibx.ws.WsException" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <description>Top-level breakout (depth=2)</description>
+      </grid>
+      <grid name="Diagram 1" enforce="true" strict="false">
+         <row>
+            <cell name="tcp" pattern="org.jibx.ws.tcp.*" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="client" pattern="org.jibx.ws.tcp.client.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="TcpTransport" pattern="org.jibx.ws.tcp.client.TcpTransport" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="TcpTransportOptions" pattern="org.jibx.ws.tcp.client.TcpTransportOptions" vexpanded="true" visibility="public" />
+                              <cell name="TcpChannel" pattern="org.jibx.ws.tcp.client.TcpChannel" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="server" pattern="org.jibx.ws.tcp.server.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="TcpServer" pattern="org.jibx.ws.tcp.server.TcpServer" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="SocketRunner" pattern="org.jibx.ws.tcp.server.SocketRunner" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+            <cell name="soap" pattern="org.jibx.ws.soap.*" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="server" pattern="org.jibx.ws.soap.server.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="SoapFaultHandler" pattern="org.jibx.ws.soap.server.SoapFaultHandler" vexpanded="true" visibility="public" />
+                              <cell name="SoapService" pattern="org.jibx.ws.soap.server.SoapService" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="client" pattern="org.jibx.ws.soap.client.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="SoapClient" pattern="org.jibx.ws.soap.client.SoapClient" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="SoapFaultResolver" pattern="org.jibx.ws.soap.client.SoapFaultResolver" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="common" pattern="org.jibx.ws.soap.common.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="SoapProcessor" pattern="org.jibx.ws.soap.common.SoapProcessor" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="soap" pattern="org.jibx.ws.soap.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="SoapPhase" pattern="org.jibx.ws.soap.SoapPhase" vexpanded="true" visibility="public" />
+                              <cell name="SoapWriter" pattern="org.jibx.ws.soap.SoapWriter" vexpanded="true" visibility="public" />
+                              <cell name="WsNotUnderstoodException" pattern="org.jibx.ws.soap.WsNotUnderstoodException" vexpanded="true" visibility="public" />
+                              <cell name="SoapFaultException" pattern="org.jibx.ws.soap.SoapFaultException" vexpanded="true" visibility="public" />
+                              <cell name="SoapProtocol" pattern="org.jibx.ws.soap.SoapProtocol" vexpanded="true" visibility="public" />
+                              <cell name="SoapReader" pattern="org.jibx.ws.soap.SoapReader" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="SoapFault" pattern="org.jibx.ws.soap.SoapFault" vexpanded="true" visibility="public" />
+                              <cell name="SoapConstants" pattern="org.jibx.ws.soap.SoapConstants" vexpanded="true" visibility="public" />
+                              <cell name="SoapVersion" pattern="org.jibx.ws.soap.SoapVersion" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+            <cell name="http" pattern="org.jibx.ws.http.*" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="client.javase" pattern="org.jibx.ws.http.client.javase.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="HttpTransport" pattern="org.jibx.ws.http.client.javase.HttpTransport" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="HttpChannel" pattern="org.jibx.ws.http.client.javase.HttpChannel" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="HttpTransportOptions" pattern="org.jibx.ws.http.client.javase.HttpTransportOptions" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="servlet" pattern="org.jibx.ws.http.servlet.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="WsServlet" pattern="org.jibx.ws.http.servlet.WsServlet" vexpanded="true" visibility="public" />
+                              <cell name="WsSpringServlet" pattern="org.jibx.ws.http.servlet.WsSpringServlet" vexpanded="true" visibility="public" />
+                              <cell name="SingleServiceMapper" pattern="org.jibx.ws.http.servlet.SingleServiceMapper" vexpanded="true" visibility="public" />
+                              <cell name="WsdlLocationToRequestUrlAdapter" pattern="org.jibx.ws.http.servlet.WsdlLocationToRequestUrlAdapter" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="WsServletDelegate" pattern="org.jibx.ws.http.servlet.WsServletDelegate" vexpanded="true" visibility="public" />
+                              <cell name="PathBasedServiceMapper" pattern="org.jibx.ws.http.servlet.PathBasedServiceMapper" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="HttpServletOptions" pattern="org.jibx.ws.http.servlet.HttpServletOptions" vexpanded="true" visibility="public" />
+                              <cell name="ServiceMapper" pattern="org.jibx.ws.http.servlet.ServiceMapper" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="HttpServletOptionsDefinition" pattern="org.jibx.ws.http.servlet.HttpServletOptionsDefinition" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+            <cell name="pox" pattern="org.jibx.ws.pox.*" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="client" pattern="org.jibx.ws.pox.client.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="PoxClient" pattern="org.jibx.ws.pox.client.PoxClient" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="pox" pattern="org.jibx.ws.pox.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="PoxProtocol" pattern="org.jibx.ws.pox.PoxProtocol" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="common" pattern="org.jibx.ws.pox.common.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="PoxProcessor" pattern="org.jibx.ws.pox.common.PoxProcessor" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="server" pattern="org.jibx.ws.pox.server.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="PoxService" pattern="org.jibx.ws.pox.server.PoxService" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="protocol" pattern="org.jibx.ws.protocol.?" vexpanded="true" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="ProtocolDirectory" pattern="org.jibx.ws.protocol.ProtocolDirectory" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="Protocol" pattern="org.jibx.ws.protocol.Protocol" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+            <cell name="encoding.dime" pattern="org.jibx.ws.encoding.dime.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="DimeOutputBuffer" pattern="org.jibx.ws.encoding.dime.DimeOutputBuffer" vexpanded="true" visibility="public" />
+                     <cell name="DimeInputBuffer" pattern="org.jibx.ws.encoding.dime.DimeInputBuffer" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="DimeCommon" pattern="org.jibx.ws.encoding.dime.DimeCommon" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="client" pattern="org.jibx.ws.client.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="Client" pattern="org.jibx.ws.client.Client" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+            <cell name="server" pattern="org.jibx.ws.server.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="ServicePool" pattern="org.jibx.ws.server.ServicePool" vexpanded="true" visibility="public" />
+                     <cell name="InterceptorDefinition" pattern="org.jibx.ws.server.InterceptorDefinition" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="ServiceFactory" pattern="org.jibx.ws.server.ServiceFactory" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="Service" pattern="org.jibx.ws.server.Service" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="MediaTypeMapper" pattern="org.jibx.ws.server.MediaTypeMapper" vexpanded="true" visibility="public" />
+                     <cell name="ServiceDefinition" pattern="org.jibx.ws.server.ServiceDefinition" vexpanded="true" visibility="public" />
+                     <cell name="ServiceExceptionHandlerFactory" pattern="org.jibx.ws.server.ServiceExceptionHandlerFactory" vexpanded="true" visibility="public" />
+                     <cell name="Operation" pattern="org.jibx.ws.server.Operation" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="BindingLocator" pattern="org.jibx.ws.server.BindingLocator" vexpanded="true" visibility="public" />
+                     <cell name="TransportOptionsDefinition" pattern="org.jibx.ws.server.TransportOptionsDefinition" vexpanded="true" visibility="public" />
+                     <cell name="OperationDefinition" pattern="org.jibx.ws.server.OperationDefinition" vexpanded="true" visibility="public" />
+                     <cell name="ServiceExceptionHandler" pattern="org.jibx.ws.server.ServiceExceptionHandler" vexpanded="true" visibility="public" />
+                     <cell name="HandlerDefinition" pattern="org.jibx.ws.server.HandlerDefinition" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="ObjectDefinition" pattern="org.jibx.ws.server.ObjectDefinition" vexpanded="true" visibility="public" />
+                     <cell name="TransportOptions" pattern="org.jibx.ws.server.TransportOptions" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="process.common" pattern="org.jibx.ws.process.common.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="Processor" pattern="org.jibx.ws.process.common.Processor" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="transport" pattern="org.jibx.ws.transport.*" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="transport" pattern="org.jibx.ws.transport.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="StreamBufferInPool" pattern="org.jibx.ws.transport.StreamBufferInPool" vexpanded="true" visibility="public" />
+                              <cell name="StreamBufferOutPool" pattern="org.jibx.ws.transport.StreamBufferOutPool" vexpanded="true" visibility="public" />
+                              <cell name="OutputCompletionListener" pattern="org.jibx.ws.transport.OutputCompletionListener" vexpanded="true" visibility="public" />
+                              <cell name="SimpleDuplexConnection" pattern="org.jibx.ws.transport.SimpleDuplexConnection" vexpanded="true" visibility="public" />
+                              <cell name="TransportDirectory" pattern="org.jibx.ws.transport.TransportDirectory" vexpanded="true" visibility="public" />
+                              <cell name="InputStreamInterceptable" pattern="org.jibx.ws.transport.InputStreamInterceptable" vexpanded="true" visibility="public" />
+                              <cell name="OutConnectionBase" pattern="org.jibx.ws.transport.OutConnectionBase" vexpanded="true" visibility="public" />
+                              <cell name="WsTransportException" pattern="org.jibx.ws.transport.WsTransportException" vexpanded="true" visibility="public" />
+                              <cell name="OutServerConnection" pattern="org.jibx.ws.transport.OutServerConnection" vexpanded="true" visibility="public" />
+                              <cell name="OutputStreamInterceptable" pattern="org.jibx.ws.transport.OutputStreamInterceptable" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="OutputCompletionEvent" pattern="org.jibx.ws.transport.OutputCompletionEvent" vexpanded="true" visibility="public" />
+                              <cell name="Transport" pattern="org.jibx.ws.transport.Transport" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="Channel" pattern="org.jibx.ws.transport.Channel" vexpanded="true" visibility="public" />
+                              <cell name="TransportOptions" pattern="org.jibx.ws.transport.TransportOptions" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="DuplexConnection" pattern="org.jibx.ws.transport.DuplexConnection" vexpanded="true" visibility="public" />
+                              <cell name="MessageProperties" pattern="org.jibx.ws.transport.MessageProperties" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="InConnection" pattern="org.jibx.ws.transport.InConnection" vexpanded="true" visibility="public" />
+                              <cell name="OutConnection" pattern="org.jibx.ws.transport.OutConnection" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="InMessageAttributes" pattern="org.jibx.ws.transport.InMessageAttributes" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="interceptor" pattern="org.jibx.ws.transport.interceptor.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="CopiedOutputStreamInterceptor" pattern="org.jibx.ws.transport.interceptor.CopiedOutputStreamInterceptor" vexpanded="true" visibility="public" />
+                              <cell name="CopiedInputStreamInterceptor" pattern="org.jibx.ws.transport.interceptor.CopiedInputStreamInterceptor" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="InputStreamInterceptor" pattern="org.jibx.ws.transport.interceptor.InputStreamInterceptor" vexpanded="true" visibility="public" />
+                              <cell name="OutputStreamInterceptor" pattern="org.jibx.ws.transport.interceptor.OutputStreamInterceptor" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="codec" pattern="org.jibx.ws.codec.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="TextCodecFactory" pattern="org.jibx.ws.codec.TextCodecFactory" vexpanded="true" visibility="public" />
+                     <cell name="CodecCache" pattern="org.jibx.ws.codec.CodecCache" vexpanded="true" visibility="public" />
+                     <cell name="CodecPool" pattern="org.jibx.ws.codec.CodecPool" vexpanded="true" visibility="public" />
+                     <cell name="XbisCodecFactory" pattern="org.jibx.ws.codec.XbisCodecFactory" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="CodecDirectory" pattern="org.jibx.ws.codec.CodecDirectory" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="CodecFactory" pattern="org.jibx.ws.codec.CodecFactory" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="XmlCodec" pattern="org.jibx.ws.codec.XmlCodec" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="MediaType" pattern="org.jibx.ws.codec.MediaType" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+            <cell name="context" pattern="org.jibx.ws.context.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="ExchangeContext" pattern="org.jibx.ws.context.ExchangeContext" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="OutContext" pattern="org.jibx.ws.context.OutContext" vexpanded="true" visibility="public" />
+                     <cell name="InContext" pattern="org.jibx.ws.context.InContext" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="MessageContext" pattern="org.jibx.ws.context.MessageContext" vexpanded="true" visibility="public" />
+                     <cell name="Phase" pattern="org.jibx.ws.context.Phase" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="Context" pattern="org.jibx.ws.context.Context" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="util" pattern="org.jibx.ws.util.?" vexpanded="true" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="ExpandingPool" pattern="org.jibx.ws.util.ExpandingPool" vexpanded="true" visibility="public" />
+                     <cell name="Utility" pattern="org.jibx.ws.util.Utility" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+            <cell name="io" pattern="org.jibx.ws.io.*" vexpanded="true" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="handler" pattern="org.jibx.ws.io.handler.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="MarshallingOutHandler" pattern="org.jibx.ws.io.handler.MarshallingOutHandler" vexpanded="true" visibility="public" />
+                              <cell name="ExceptionWriter" pattern="org.jibx.ws.io.handler.ExceptionWriter" vexpanded="true" visibility="public" />
+                              <cell name="ContextAttributeUnmarshallingInHandler" pattern="org.jibx.ws.io.handler.ContextAttributeUnmarshallingInHandler" vexpanded="true" visibility="public" />
+                              <cell name="UnmarshallingInHandler" pattern="org.jibx.ws.io.handler.UnmarshallingInHandler" vexpanded="true" visibility="public" />
+                              <cell name="ExceptionReader" pattern="org.jibx.ws.io.handler.ExceptionReader" vexpanded="true" visibility="public" />
+                              <cell name="ContextAttributeMarshallingOutHandler" pattern="org.jibx.ws.io.handler.ContextAttributeMarshallingOutHandler" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="InHandler" pattern="org.jibx.ws.io.handler.InHandler" vexpanded="true" visibility="public" />
+                              <cell name="OutHandler" pattern="org.jibx.ws.io.handler.OutHandler" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="io" pattern="org.jibx.ws.io.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="MessageOptions" pattern="org.jibx.ws.io.MessageOptions" vexpanded="true" visibility="public" />
+                              <cell name="CopiedInputStream" pattern="org.jibx.ws.io.CopiedInputStream" vexpanded="true" visibility="public" />
+                              <cell name="CopiedOutputStream" pattern="org.jibx.ws.io.CopiedOutputStream" vexpanded="true" visibility="public" />
+                              <cell name="UnmarshallingPayloadReader" pattern="org.jibx.ws.io.UnmarshallingPayloadReader" vexpanded="true" visibility="public" />
+                              <cell name="MarshallingPayloadWriter" pattern="org.jibx.ws.io.MarshallingPayloadWriter" vexpanded="true" visibility="public" />
+                              <cell name="XmlReaderWrapper" pattern="org.jibx.ws.io.XmlReaderWrapper" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="PayloadReader" pattern="org.jibx.ws.io.PayloadReader" vexpanded="true" visibility="public" />
+                              <cell name="PayloadWriter" pattern="org.jibx.ws.io.PayloadWriter" vexpanded="true" visibility="public" />
+                              <cell name="XmlOptions" pattern="org.jibx.ws.io.XmlOptions" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="XmlEncoding" pattern="org.jibx.ws.io.XmlEncoding" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="ws" pattern="org.jibx.ws.?" vexpanded="true" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="UnhandledWsException" pattern="org.jibx.ws.UnhandledWsException" vexpanded="true" visibility="public" />
+                     <cell name="WsConfigurationException" pattern="org.jibx.ws.WsConfigurationException" vexpanded="true" visibility="public" />
+                     <cell name="WsBindingException" pattern="org.jibx.ws.WsBindingException" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="WsException" pattern="org.jibx.ws.WsException" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <description>Top-level breakout (depth=3)</description>
+      </grid>
+      <grid name="Diagram 2" enforce="true" strict="false">
+         <row>
+            <cell name="tcp" pattern="org.jibx.ws.tcp.*" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="client" pattern="org.jibx.ws.tcp.client.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="TcpTransport" pattern="org.jibx.ws.tcp.client.TcpTransport" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="TcpTransportOptions" pattern="org.jibx.ws.tcp.client.TcpTransportOptions" vexpanded="true" visibility="public" />
+                              <cell name="TcpChannel" pattern="org.jibx.ws.tcp.client.TcpChannel" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="server" pattern="org.jibx.ws.tcp.server.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="TcpServer" pattern="org.jibx.ws.tcp.server.TcpServer" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="SocketRunner" pattern="org.jibx.ws.tcp.server.SocketRunner" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+            <cell name="soap" pattern="org.jibx.ws.soap.*" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="server" pattern="org.jibx.ws.soap.server.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="SoapFaultHandler" pattern="org.jibx.ws.soap.server.SoapFaultHandler" vexpanded="true" visibility="public" />
+                              <cell name="SoapService" pattern="org.jibx.ws.soap.server.SoapService" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="client" pattern="org.jibx.ws.soap.client.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="SoapClient" pattern="org.jibx.ws.soap.client.SoapClient" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="SoapFaultResolver" pattern="org.jibx.ws.soap.client.SoapFaultResolver" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="common" pattern="org.jibx.ws.soap.common.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="SoapProcessor" pattern="org.jibx.ws.soap.common.SoapProcessor" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="soap" pattern="org.jibx.ws.soap.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="SoapPhase" pattern="org.jibx.ws.soap.SoapPhase" vexpanded="true" visibility="public" />
+                              <cell name="SoapWriter" pattern="org.jibx.ws.soap.SoapWriter" vexpanded="true" visibility="public" />
+                              <cell name="WsNotUnderstoodException" pattern="org.jibx.ws.soap.WsNotUnderstoodException" vexpanded="true" visibility="public" />
+                              <cell name="SoapFaultException" pattern="org.jibx.ws.soap.SoapFaultException" vexpanded="true" visibility="public" />
+                              <cell name="SoapProtocol" pattern="org.jibx.ws.soap.SoapProtocol" vexpanded="true" visibility="public" />
+                              <cell name="SoapReader" pattern="org.jibx.ws.soap.SoapReader" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="SoapFault" pattern="org.jibx.ws.soap.SoapFault" vexpanded="true" visibility="public" />
+                              <cell name="SoapConstants" pattern="org.jibx.ws.soap.SoapConstants" vexpanded="true" visibility="public" />
+                              <cell name="SoapVersion" pattern="org.jibx.ws.soap.SoapVersion" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+            <cell name="http" pattern="org.jibx.ws.http.*" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="client.javase" pattern="org.jibx.ws.http.client.javase.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="HttpTransport" pattern="org.jibx.ws.http.client.javase.HttpTransport" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="HttpChannel" pattern="org.jibx.ws.http.client.javase.HttpChannel" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="HttpTransportOptions" pattern="org.jibx.ws.http.client.javase.HttpTransportOptions" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="servlet" pattern="org.jibx.ws.http.servlet.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="WsServlet" pattern="org.jibx.ws.http.servlet.WsServlet" vexpanded="true" visibility="public" />
+                              <cell name="WsSpringServlet" pattern="org.jibx.ws.http.servlet.WsSpringServlet" vexpanded="true" visibility="public" />
+                              <cell name="SingleServiceMapper" pattern="org.jibx.ws.http.servlet.SingleServiceMapper" vexpanded="true" visibility="public" />
+                              <cell name="WsdlLocationToRequestUrlAdapter" pattern="org.jibx.ws.http.servlet.WsdlLocationToRequestUrlAdapter" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="WsServletDelegate" pattern="org.jibx.ws.http.servlet.WsServletDelegate" vexpanded="true" visibility="public" />
+                              <cell name="PathBasedServiceMapper" pattern="org.jibx.ws.http.servlet.PathBasedServiceMapper" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="HttpServletOptions" pattern="org.jibx.ws.http.servlet.HttpServletOptions" vexpanded="true" visibility="public" />
+                              <cell name="ServiceMapper" pattern="org.jibx.ws.http.servlet.ServiceMapper" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="HttpServletOptionsDefinition" pattern="org.jibx.ws.http.servlet.HttpServletOptionsDefinition" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+            <cell name="pox" pattern="org.jibx.ws.pox.*" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="client" pattern="org.jibx.ws.pox.client.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="PoxClient" pattern="org.jibx.ws.pox.client.PoxClient" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="pox" pattern="org.jibx.ws.pox.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="PoxProtocol" pattern="org.jibx.ws.pox.PoxProtocol" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="common" pattern="org.jibx.ws.pox.common.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="PoxProcessor" pattern="org.jibx.ws.pox.common.PoxProcessor" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                     <cell name="server" pattern="org.jibx.ws.pox.server.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="PoxService" pattern="org.jibx.ws.pox.server.PoxService" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="protocol" pattern="org.jibx.ws.protocol.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="ProtocolDirectory" pattern="org.jibx.ws.protocol.ProtocolDirectory" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="Protocol" pattern="org.jibx.ws.protocol.Protocol" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+            <cell name="encoding.dime" pattern="org.jibx.ws.encoding.dime.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="DimeOutputBuffer" pattern="org.jibx.ws.encoding.dime.DimeOutputBuffer" vexpanded="true" visibility="public" />
+                     <cell name="DimeInputBuffer" pattern="org.jibx.ws.encoding.dime.DimeInputBuffer" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="DimeCommon" pattern="org.jibx.ws.encoding.dime.DimeCommon" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="client" pattern="org.jibx.ws.client.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="Client" pattern="org.jibx.ws.client.Client" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+            <cell name="server" pattern="org.jibx.ws.server.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="ServicePool" pattern="org.jibx.ws.server.ServicePool" vexpanded="true" visibility="public" />
+                     <cell name="InterceptorDefinition" pattern="org.jibx.ws.server.InterceptorDefinition" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="ServiceFactory" pattern="org.jibx.ws.server.ServiceFactory" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="Service" pattern="org.jibx.ws.server.Service" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="MediaTypeMapper" pattern="org.jibx.ws.server.MediaTypeMapper" vexpanded="true" visibility="public" />
+                     <cell name="ServiceDefinition" pattern="org.jibx.ws.server.ServiceDefinition" vexpanded="true" visibility="public" />
+                     <cell name="ServiceExceptionHandlerFactory" pattern="org.jibx.ws.server.ServiceExceptionHandlerFactory" vexpanded="true" visibility="public" />
+                     <cell name="Operation" pattern="org.jibx.ws.server.Operation" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="BindingLocator" pattern="org.jibx.ws.server.BindingLocator" vexpanded="true" visibility="public" />
+                     <cell name="TransportOptionsDefinition" pattern="org.jibx.ws.server.TransportOptionsDefinition" vexpanded="true" visibility="public" />
+                     <cell name="OperationDefinition" pattern="org.jibx.ws.server.OperationDefinition" vexpanded="true" visibility="public" />
+                     <cell name="ServiceExceptionHandler" pattern="org.jibx.ws.server.ServiceExceptionHandler" vexpanded="true" visibility="public" />
+                     <cell name="HandlerDefinition" pattern="org.jibx.ws.server.HandlerDefinition" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="ObjectDefinition" pattern="org.jibx.ws.server.ObjectDefinition" vexpanded="true" visibility="public" />
+                     <cell name="TransportOptions" pattern="org.jibx.ws.server.TransportOptions" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="wsdl" pattern="org.jibx.ws.wsdl.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="InputStreamWsdlProvider" pattern="org.jibx.ws.wsdl.InputStreamWsdlProvider" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="WsdlProvider" pattern="org.jibx.ws.wsdl.WsdlProvider" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+            <cell name="process.common" pattern="org.jibx.ws.process.common.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="Processor" pattern="org.jibx.ws.process.common.Processor" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="transport" pattern="org.jibx.ws.transport.*" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="transport" pattern="org.jibx.ws.transport.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="StreamBufferInPool" pattern="org.jibx.ws.transport.StreamBufferInPool" vexpanded="true" visibility="public" />
+                              <cell name="StreamBufferOutPool" pattern="org.jibx.ws.transport.StreamBufferOutPool" vexpanded="true" visibility="public" />
+                              <cell name="OutputCompletionListener" pattern="org.jibx.ws.transport.OutputCompletionListener" vexpanded="true" visibility="public" />
+                              <cell name="SimpleDuplexConnection" pattern="org.jibx.ws.transport.SimpleDuplexConnection" vexpanded="true" visibility="public" />
+                              <cell name="TransportDirectory" pattern="org.jibx.ws.transport.TransportDirectory" vexpanded="true" visibility="public" />
+                              <cell name="InputStreamInterceptable" pattern="org.jibx.ws.transport.InputStreamInterceptable" vexpanded="true" visibility="public" />
+                              <cell name="OutConnectionBase" pattern="org.jibx.ws.transport.OutConnectionBase" vexpanded="true" visibility="public" />
+                              <cell name="WsTransportException" pattern="org.jibx.ws.transport.WsTransportException" vexpanded="true" visibility="public" />
+                              <cell name="OutServerConnection" pattern="org.jibx.ws.transport.OutServerConnection" vexpanded="true" visibility="public" />
+                              <cell name="OutputStreamInterceptable" pattern="org.jibx.ws.transport.OutputStreamInterceptable" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="OutputCompletionEvent" pattern="org.jibx.ws.transport.OutputCompletionEvent" vexpanded="true" visibility="public" />
+                              <cell name="Transport" pattern="org.jibx.ws.transport.Transport" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="Channel" pattern="org.jibx.ws.transport.Channel" vexpanded="true" visibility="public" />
+                              <cell name="TransportOptions" pattern="org.jibx.ws.transport.TransportOptions" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="DuplexConnection" pattern="org.jibx.ws.transport.DuplexConnection" vexpanded="true" visibility="public" />
+                              <cell name="MessageProperties" pattern="org.jibx.ws.transport.MessageProperties" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="InConnection" pattern="org.jibx.ws.transport.InConnection" vexpanded="true" visibility="public" />
+                              <cell name="OutConnection" pattern="org.jibx.ws.transport.OutConnection" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="InMessageAttributes" pattern="org.jibx.ws.transport.InMessageAttributes" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="interceptor" pattern="org.jibx.ws.transport.interceptor.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="CopiedOutputStreamInterceptor" pattern="org.jibx.ws.transport.interceptor.CopiedOutputStreamInterceptor" vexpanded="true" visibility="public" />
+                              <cell name="CopiedInputStreamInterceptor" pattern="org.jibx.ws.transport.interceptor.CopiedInputStreamInterceptor" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="InputStreamInterceptor" pattern="org.jibx.ws.transport.interceptor.InputStreamInterceptor" vexpanded="true" visibility="public" />
+                              <cell name="OutputStreamInterceptor" pattern="org.jibx.ws.transport.interceptor.OutputStreamInterceptor" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="codec" pattern="org.jibx.ws.codec.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="TextCodecFactory" pattern="org.jibx.ws.codec.TextCodecFactory" vexpanded="true" visibility="public" />
+                     <cell name="CodecCache" pattern="org.jibx.ws.codec.CodecCache" vexpanded="true" visibility="public" />
+                     <cell name="CodecPool" pattern="org.jibx.ws.codec.CodecPool" vexpanded="true" visibility="public" />
+                     <cell name="XbisCodecFactory" pattern="org.jibx.ws.codec.XbisCodecFactory" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="CodecDirectory" pattern="org.jibx.ws.codec.CodecDirectory" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="CodecFactory" pattern="org.jibx.ws.codec.CodecFactory" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="XmlCodec" pattern="org.jibx.ws.codec.XmlCodec" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="MediaType" pattern="org.jibx.ws.codec.MediaType" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+            <cell name="context" pattern="org.jibx.ws.context.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="ExchangeContext" pattern="org.jibx.ws.context.ExchangeContext" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="OutContext" pattern="org.jibx.ws.context.OutContext" vexpanded="true" visibility="public" />
+                     <cell name="InContext" pattern="org.jibx.ws.context.InContext" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="MessageContext" pattern="org.jibx.ws.context.MessageContext" vexpanded="true" visibility="public" />
+                     <cell name="Phase" pattern="org.jibx.ws.context.Phase" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="Context" pattern="org.jibx.ws.context.Context" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="util" pattern="org.jibx.ws.util.?" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="ExpandingPool" pattern="org.jibx.ws.util.ExpandingPool" vexpanded="true" visibility="public" />
+                     <cell name="Utility" pattern="org.jibx.ws.util.Utility" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+            <cell name="io" pattern="org.jibx.ws.io.*" vexpanded="false" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="handler" pattern="org.jibx.ws.io.handler.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="MarshallingOutHandler" pattern="org.jibx.ws.io.handler.MarshallingOutHandler" vexpanded="true" visibility="public" />
+                              <cell name="ExceptionWriter" pattern="org.jibx.ws.io.handler.ExceptionWriter" vexpanded="true" visibility="public" />
+                              <cell name="ContextAttributeUnmarshallingInHandler" pattern="org.jibx.ws.io.handler.ContextAttributeUnmarshallingInHandler" vexpanded="true" visibility="public" />
+                              <cell name="UnmarshallingInHandler" pattern="org.jibx.ws.io.handler.UnmarshallingInHandler" vexpanded="true" visibility="public" />
+                              <cell name="ExceptionReader" pattern="org.jibx.ws.io.handler.ExceptionReader" vexpanded="true" visibility="public" />
+                              <cell name="ContextAttributeMarshallingOutHandler" pattern="org.jibx.ws.io.handler.ContextAttributeMarshallingOutHandler" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="InHandler" pattern="org.jibx.ws.io.handler.InHandler" vexpanded="true" visibility="public" />
+                              <cell name="OutHandler" pattern="org.jibx.ws.io.handler.OutHandler" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+                  <row>
+                     <cell name="io" pattern="org.jibx.ws.io.?" vexpanded="false" visibility="public">
+                        <grid>
+                           <row>
+                              <cell name="MessageOptions" pattern="org.jibx.ws.io.MessageOptions" vexpanded="true" visibility="public" />
+                              <cell name="CopiedInputStream" pattern="org.jibx.ws.io.CopiedInputStream" vexpanded="true" visibility="public" />
+                              <cell name="CopiedOutputStream" pattern="org.jibx.ws.io.CopiedOutputStream" vexpanded="true" visibility="public" />
+                              <cell name="UnmarshallingPayloadReader" pattern="org.jibx.ws.io.UnmarshallingPayloadReader" vexpanded="true" visibility="public" />
+                              <cell name="MarshallingPayloadWriter" pattern="org.jibx.ws.io.MarshallingPayloadWriter" vexpanded="true" visibility="public" />
+                              <cell name="XmlReaderWrapper" pattern="org.jibx.ws.io.XmlReaderWrapper" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="PayloadReader" pattern="org.jibx.ws.io.PayloadReader" vexpanded="true" visibility="public" />
+                              <cell name="PayloadWriter" pattern="org.jibx.ws.io.PayloadWriter" vexpanded="true" visibility="public" />
+                              <cell name="XmlOptions" pattern="org.jibx.ws.io.XmlOptions" vexpanded="true" visibility="public" />
+                           </row>
+                           <row>
+                              <cell name="XmlEncoding" pattern="org.jibx.ws.io.XmlEncoding" vexpanded="true" visibility="public" />
+                           </row>
+                        </grid>
+                     </cell>
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <row>
+            <cell name="ws" pattern="org.jibx.ws.?" vexpanded="true" visibility="public">
+               <grid>
+                  <row>
+                     <cell name="UnhandledWsException" pattern="org.jibx.ws.UnhandledWsException" vexpanded="true" visibility="public" />
+                     <cell name="WsConfigurationException" pattern="org.jibx.ws.WsConfigurationException" vexpanded="true" visibility="public" />
+                     <cell name="WsBindingException" pattern="org.jibx.ws.WsBindingException" vexpanded="true" visibility="public" />
+                  </row>
+                  <row>
+                     <cell name="WsException" pattern="org.jibx.ws.WsException" vexpanded="true" visibility="public" />
+                  </row>
+               </grid>
+            </cell>
+         </row>
+         <description>Top-level breakout (depth=3)</description>
+      </grid>
+   </grid-set>
+</local-project>
+

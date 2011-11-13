@@ -1,0 +1,139 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="../concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Media Type for responses </h1>
+
+    <p>
+      The media type that is used for responses depends on the transport in use.
+    </p>
+
+    <h4 id="mediaTypeList">Media type list</h4>
+    <p>The media types are sorted in order of preference.  All of the examples in this specification assume that the order of preference of the media types is:</p>
+    <table concordion:verifyRows="#mediaType : getOrderedMediaTypes()">
+    <tr><th concordion:assertEquals="#mediaType">media type</th></tr>
+    <tr><td>application/x-xbis</td></tr>
+    <tr><td>application/soap+x-xbis</td></tr>
+    <tr><td>text/xml</td></tr>
+    <tr><td>application/soap+xml</td></tr>
+    </table>  
+    
+    <h2>HTTP</h2>
+    <p>
+    The media type is determined based on the Accept header field, as defined in <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1">RFC 2616</a>.
+    JiBX/WS mostly complies with this specification, except that it ignores all media type parameters.  In particular the quality factor "q" parameter is ignored, and 
+    is not used as a factor in determining the media type.
+    </p>
+   
+    <p>
+    The following rules are used in determining the media type for a response.
+    </p>
+    <ol>
+    <li>If no Accept request-header field is present, then it is assumed that the client accepts all media types 
+     (as per RFC2616) and the response's media type is set to:
+     <ul>
+     <li>the <code>Content-Type</code> of the request, assuming there is a codec available for the 
+     <code>Content-Type</code>,</li>
+     <li>otherwise the <a href="#mostPreferred">most preferred</a> media type is returned.</li>
+     </ul>
+    <div class="example">
+
+        <h3>Example</h3>
+        <table concordion:execute="#result = getResponseMediaType(#accept, #contentType)">
+        <tr><th concordion:set="#accept">Request Accept header</th><th concordion:set="#contentType">Request Content-Type header</th><th concordion:assertEquals="#result">Response Content-Type header</th></tr>
+        <tr><td>{not present}</td><td>text/xml</td><td>text/xml</td></tr>
+        <tr><td>{not present}</td><td>foo/bar</td><td>application/x-xbis</td></tr>
+        </table>
+
+    </div>
+    </li>
+
+    <li>Otherwise, the Accept request-header field contains one or more media-ranges that are comma separated, in which
+     case the media-ranges are checked in the following order:
+     <ol>
+     <li><p>All media-ranges that reference specific media types ("type/subtype") are checked for matches with supported 
+      media types. The <a href="#mostPreferred">most preferred</a> media type that matches any of the media-ranges is returned.</p>
+    
+    <div class="example">
+
+        <h3>Example</h3>
+        <table concordion:execute="#result = getResponseMediaType(#accept)">
+        <tr><th concordion:set="#accept">Request Accept header</th><th concordion:assertEquals="#result">Response Content-Type header</th></tr>
+        <tr><td>text/xml</td><td>text/xml</td></tr>
+        <tr><td>text/xml</td><td>text/xml</td></tr>
+        <tr><td>application/soap+x-xbis</td><td>application/soap+x-xbis</td></tr>
+        <tr><td>application/soap+xml;action=xyz</td><td>application/soap+xml</td></tr>
+        <tr><td>application/*; q=1, text/xml; q=.8, */*; q=0.5</td><td>text/xml</td></tr>
+        <tr><td> text/xml, application/*, */*</td><td>text/xml</td></tr>
+        <tr><td> text/xml, application/soap+x-xbis, application/*, */*</td><td>application/soap+x-xbis</td></tr>
+        </table>
+
+    </div>
+    </li>
+
+     <li><p>Otherwise, all media-ranges that specify all subtypes of a particular type ("type/*") are checked for 
+     matches with supported media types. The <a href="#mostPreferred">most preferred</a> media type that matches any of
+      the media-ranges is returned.</p>
+    
+    <div class="example">
+
+        <h3>Example</h3>
+        <table concordion:execute="#result = getResponseMediaType(#accept)">
+        <tr><th concordion:set="#accept">Request Accept header</th><th concordion:assertEquals="#result">Response Content-Type header</th></tr>
+        <tr><td>text/*</td><td>text/xml</td></tr>
+        <tr><td>text/*;action=xyz</td><td>text/xml</td></tr>
+        <tr><td>foo/*, text/html, text/*</td><td>text/xml</td></tr>
+        <tr><td>text/html, application/*, text/*</td><td>application/x-xbis</td></tr>
+        <tr><td>text/html, application/*, */*</td><td>application/x-xbis</td></tr>
+        <tr><td>text/html; q=1, application/*; q=.2,  */*; q=0.5</td><td>application/x-xbis</td></tr>
+        </table>
+
+    </div>
+    </li>
+
+    <li>Otherwise, if a media-range specifies all media types (*/*), this method returns:
+     <ul>
+     <li>the <code>Content-Type</code> of the request, assuming there is a codec available for the 
+     <code>Content-Type</code>,</li>
+     <li>otherwise the <a href="#mostPreferred">most preferred</a> media type is returned.</li>
+     </ul>
+    <div class="example">
+
+        <h3>Example</h3>
+        <table concordion:execute="#result = getResponseMediaType(#accept, #contentType)">
+        <tr><th concordion:set="#accept">Request Accept header</th><th concordion:set="#contentType">Request Content-Type header</th><th concordion:assertEquals="#result">Response Content-Type header</th></tr>
+        <tr><td>*/*</td><td>text/xml</td><td>text/xml</td></tr>
+        <tr><td>*/*</td><td>foo/bar</td><td>application/x-xbis</td></tr>
+        <tr><td>foo/*, text/html,  application/bar, */*</td><td>application/soap+x-xbis</td><td>application/soap+x-xbis</td></tr>
+        <tr><td>foo/*, text/html,  application/bar, */*</td><td>foo/bar</td><td>application/x-xbis</td></tr>
+        </table>
+
+    </div>
+    </li>
+
+    <li>If no matches are found, an error is returned.
+    
+        <h3>Example</h3>
+        <table concordion:execute="#result = getResponseMediaType(#accept)">
+        <tr><th concordion:set="#accept">Request Accept header</th><th concordion:assertEquals="#result"/></tr>
+        <tr><td>foo/bar</td><td>{error}</td></tr>
+        <tr><td>application/html; charset=utf-8</td><td>{error}</td></tr>
+        <tr><td>foo/*</td><td>{error}</td></tr>
+        <tr><td>foo/bar, foo/*, text/html, action/*</td><td>{error}</td></tr>
+        </table>
+    </li>    
+    
+    
+    </ol>
+    
+    </li>
+    </ol>
+    
+    <h4 id="mostPreferred">Most Preferred</h4>
+    <p>
+      The most preferred media type is determined by checking against the <a href="#mediaTypeList">list of supported 
+      media types</a> in decreasing preference order.   
+    </p>
+
+</body>
+</html>

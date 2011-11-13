@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JiBX/WS: HTTP Servlet Configuration Details</title>
+</head>
+<body class="composite">
+
+<div id="bodycol">
+<div class="app">
+<div class="h3">
+
+<h3>HTTP Servlet Configuration Details</h3>
+
+<p>This section describes the HTTP servlet configuration when using JiBX/WS specific configuration files.  For Spring
+configured services, see <a href="%spring%">Using JiBX/WS with Spring</a>.
+
+<p>The JiBX/WS server must be configured in the <i>WEB-INF/web.xml</i> file for a web application (which will
+normally be deployed in the form of a <i>war</i> file).</p>
+
+<p>Here's an example of the JiBX/WS configuration within a <i>WEB-INF/web.xml</i> file:</p>
+
+<div id="source"><pre>&lt;web-app>
+  
+  &lt;servlet>
+    &lt;servlet-name>soap_servlet&lt;/servlet-name>
+    &lt;servlet-class>org.jibx.ws.http.servlet.WsServlet&lt;/servlet-class>
+    &lt;init-param>
+      &lt;param-name>quake-service&lt;/param-name>
+      &lt;param-value>quake-service.xml&lt;/param-value>
+    &lt;/init-param>
+  &lt;/servlet>
+  
+  &lt;servlet-mapping>
+    &lt;servlet-name>soap_servlet&lt;/servlet-name>
+    &lt;url-pattern>/&lt;/url-pattern>
+  &lt;/servlet-mapping>
+  
+&lt;/web-app>
+</pre></div>
+
+<p>The <b>&lt;servlet></b> element in the sample configures JiBX/WS to use the <a href="%define%">service
+definition</a> file at <i>WEB-INF/quake-service.xml</i> to define a service named <i>"quake-service"</i>. The <b>&lt;servlet-mapping></b>
+element defines the path used to access the JiBX/WS server. Here the path is just set to <i>/</i>, meaning that the
+JiBX/WS server will by default handle all requests received for the containing web application. All together, this
+configures a single service that will be accessed at the path <i>/quake-service</i> within the web application.</p>
+
+<p>For the example only a single service is configured; if you want to define multiple services using a single
+instance of the JiBX/WS server you can do so by just using a separate <b>&lt;init-param></b> element for each service.
+The <b>&lt;param-name></b> child element gives the name of the service (which must be unique), while the <b>&lt;param-value></b>
+value is the corresponding service definition file name.</p>
+
+<p>You can also define multiple instances of the JiBX/WS server within your web application, and can combine the
+JiBX/WS server with other servlet definitions.</p>
+
+<p>An HTTP request is matched to a service definition based on the request's URI. If the URI contains extra path 
+information between the servlet path and query string, the <i>service path</i> is set to this extra path information.   
+If no extra path information is present, the <i>service path</i> is set to the servlet path.  JiBX/WS will 
+match the <i>service path</i> to the service defined with a corresponding <b>&lt;param-name></b> in an <b>&lt;init-param></b> element. If
+no match can be found, the servlet will return a 404 Not Found status code.</p>
+
+</div>
+</div>
+</div>
+
+</body>
+</html>

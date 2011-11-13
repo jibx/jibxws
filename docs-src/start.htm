@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>JiBX/WS: Getting Started</title>
+</head>
+<body class="composite">
+
+<h1>Getting Started</h1>
+
+<div id="bodycol">
+<div class="app">
+<div class="h3">
+
+<h3><a name="install">Installation</a></h3>
+
+<p>Download one of the jibx-ws packages:</p>
+<ul>
+<li>The <b>minimal</b> zip file. This does not include any dependencies.  The dependencies can be obtained:
+  <ul>
+  <li>from an existing JiBX installation, or</li>
+  <li>by using the supplied Ant script to download all required dependencies using Ivy, or</li>
+  <li>in the case of the starter project, by using the supplied Maven or Gradle builds.</li>
+  </ul>
+<li>Or the <b>with-deps</b> zip file. This includes all dependencies that are required to run all examples and build JiBX/WS. </li> 
+</ul>
+
+<p>Unpacking the zip file will create a <i>jibxws</i> directory that contains the distribution files, including a complete copy of this documentation in the <i>/docs</i>
+directory. The <i>/build</i> directory provides the full JiBX/WS source and the actual Ant build file, while the <i>/starter</i>
+and <i>/examples</i> directories contain the <a href="#starter">starter</a> and <a href="%example%">example</a> applications
+(with their own build files). The <i>jibx-ws.jar</i> file containing the compiled JiBX/WS code is in the <i>/lib</i>
+directory.</p>
+<p>The jar files that JiBX/WS depends on are in the <i>/dep-lib</i> folder.  
+JiBX/WS can be used without the Spring Framework, however if you do wish to use it with Spring, the additional jars are in 
+ the <i>/spring-lib</i> folder.</p>
+<h4><a name="minimal">Minimal Distribution</a></h4>
+<p>If using the minimal distribution, JiBX/WS requires the <i>jibx-bind</i>, <i>jibx-extras</i>,
+<i>jibx-run</i> and <i>xbis-jibx</i> jars from
+the JiBX installation. There are 4 configuration options:  
+<ol>
+<li>Copy these jars to the dep-lib directory of the JiBX/WS distribution (jibxws/dep-lib), or</li>
+<li>Install JiBX/WS as a direct child of the JiBX installation (JiBX/WS will check the jibxws/../lib directory), or</li>
+<li>Set the JIBX_HOME environment variable to the home of the JiBX installation (JiBX/WS will check the $JIBX_HOME/lib directory), or</li>
+<li>Edit the <i>build/ant/common.xml</i> Ant script to set the path directly.</li>
+</ol>
+<p>Alternatively, the easiest way to install all the jars that JiBX/WS depends on is to run the "ant retrieve" target 
+from the <i>build</i> folder of the download.  This target installs and uses <a href="http://ant.apache.org/ivy/">Ivy</a> 
+to download the dependencies.  The <i>ivy.xml</i> file describes the dependencies.</p>  
+
+<h3><a name="knowledge">Prerequisite Knowledge</a></h3>
+<p>In order to use JiBX/WS, you'll need at least a basic understanding of <a
+  href="%jibx%/getting-started.html">JiBX</a>.</p>
+<p>The starter application contains a manually created 
+ <a href="%jibx%/binding/tutorial/binding-tutorial.html">JiBX binding</a> file.  If you are not using existing binding files, 
+ the recommended approach is to use the JiBX generator tools. These provide a simple, flexible means for generating bindings, and will also generate an XML 
+ schema definition if <a href="%jibx%/fromcode/index.html">starting from code</a>, or the Java data model if
+ <a href="%jibx%/fromschema/index.html"> starting from an XML schema.</a></p>
+<h3><a name="starter">Starter Application</a></h3>
+<p>The starter application, in the <i>/starter</i> folder, illustrates these basic steps required to build a JiBX/WS
+application:</p>
+<table cellpadding="3" cellspacing="2" border="1" width="100%">
+	<tr class="b">
+		<th>Step</th>
+		<th>Example file (in starter folder)</th>
+	</tr>
+	<tr class="a">
+		<td>Create Java classes representing the message payloads to be exchanged</td>
+		<td>src/main/java/org/jibx/ws/starter/*.java</td>
+	</tr>
+	<tr class="b">
+		<td>Create JiBX binding definitions to describe how to transform these Java classes to/from XML</td>
+		<td>src/main/jibx/hello-binding.xml</td>
+	</tr>
+	<tr class="a">
+		<td>Create a Java service</td>
+		<td>src/main/java/org/jibx/ws/starter/server/HelloService.java</td>
+	</tr>
+	<tr class="b">
+		<td>Create a <a href="%define%">service definition</a></td>
+		<td>src/main/webapp/WEB-INF/welcome-service.xml</td>
+	</tr>
+	<tr class="a">
+		<td><a href="%config%">Configure the server</a> with a web.xml file referencing the service definition</td>
+		<td>src/main/webapp/WEB-INF/web.xml</td>
+	</tr>
+	<tr class="b">
+		<td>Create a Java <a href=%client%>client</a> to invoke the service</td>
+		<td>src/main/java/org/jibx/ws/starter/client/HelloClient.java</td>
+	</tr>
+</table>
+<p>These steps assume the application is running SOAP over HTTP using a text encoding. For other options,
+configuration changes are required. To run over TCP, JiBX/WS includes a TcpServer, which does not require the service to
+be packaged as a .war file.</p>
+<h4>Building and running</h4>
+<p>The Starter Application can be run using Ant, Maven or Gradle. See <i>/starter/README.html</i> for further details.</p> 
+</div>
+</div>
+</div>
+
+</body>
+</html>
