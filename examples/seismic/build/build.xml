@@ -85,7 +85,9 @@ This build.xml file has been tested with ant version 1.6.5.
       <!-- xbis-jibx.jar only required if using the XBIS encoding format -->
       <pathelement location="${jibxws.lib.dir}/xbis-jibx.jar" />
       <pathelement location="${jibxws.lib.dir}/commons-logging.jar" />
-      <pathelement location="${jibxws.lib.dir}/log4j.jar" />
+      <pathelement location="${jibxws.lib.dir}/log4j-api.jar" />
+      <pathelement location="${jibxws.lib.dir}/log4j-core.jar" />
+      <pathelement location="${jibxws.lib.dir}/log4j-1.2-api.jar" />
     </path>
     <java classname="org.jibx.ws.tcp.server.TcpServer" classpathref="tcp-server-classpath" fork="true">
       <jvmarg value="-Xms128M" />

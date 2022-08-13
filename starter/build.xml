@@ -82,7 +82,9 @@ ${line.separator}
     <pathelement location="${jibx.lib.dir}/xbis-jibx.jar" />
     <pathelement location="${jibxws.lib.dir}/commons-logging.jar" />
     <!-- log4j.jar only required if using log4j with commons-logging -->
-    <pathelement location="${jibx.lib.dir}/log4j.jar" />
+    <pathelement location="${jibx.lib.dir}/log4j-api.jar" />
+    <pathelement location="${jibx.lib.dir}/log4j-core.jar" />
+    <pathelement location="${jibx.lib.dir}/log4j-1.2-api.jar" />
   </path>
 
   <!-- Server classpath -->
@@ -174,7 +176,9 @@ ${line.separator}
     <copy file="${jibx.lib.dir}/xpp3.jar" todir="${war.lib.dir}" />
     <copy file="${jibxws.lib.dir}/commons-logging.jar" todir="${war.lib.dir}" />
     <!-- log4j.jar only required if using log4j with commons-logging -->
-    <copy file="${jibx.lib.dir}/log4j.jar" todir="${war.lib.dir}" />
+    <copy file="${jibx.lib.dir}/log4j-api.jar" todir="${war.lib.dir}" />
+    <copy file="${jibx.lib.dir}/log4j-core.jar" todir="${war.lib.dir}" />
+    <copy file="${jibx.lib.dir}/log4j-1.2-api.jar" todir="${war.lib.dir}" />
     <jar destfile="${war.file}" basedir="${basedir}" includes="WEB-INF/**" />
     <delete file="${war.lib.dir}/*.jar" />
   </target>

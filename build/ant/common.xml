@@ -66,7 +66,7 @@
   <target name="-ivy-download" unless="ivy.jar.exists">
     <mkdir dir="${ivy.jar.dir}" />
     <property name="ivy.url"
-              value="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" />
+              value="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" />
     <get src="${ivy.url}" dest="${ivy.jar.file}" usetimestamp="true" />
   </target>
 
